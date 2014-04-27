@@ -30,7 +30,7 @@
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>${BUNDLE_IDENTIFIER}</string>
+	<string>${BUNDLE_IDENTIFIER}com.johanhenkens.Panagram</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -50,7 +50,7 @@
 			<string>Icon@2x</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb231265150320768</string>
+				<string>fb1415285015407362</string>
 			</array>
 		</dict>
 		<dict>
@@ -77,13 +77,11 @@
 	<key>CFBundleVersion</key>
 	<string>${APP_VERSION}</string>
 	<key>FacebookAppID</key>
-	<string>YOUR_FACEBOOK_APP_ID</string>
+	<string>1415285015407362</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.photography</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSHumanReadableCopyright</key>
-	<string>© 2013 Parse, Inc.</string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<false/>
 	<key>UIBackgroundModes</key>

@@ -27,10 +27,10 @@ typedef enum {
 @property (nonatomic, strong) NSMutableDictionary *outstandingCountQueries;
 @end
 
-static NSUInteger const kPAPCellFollowTag = 2;
-static NSUInteger const kPAPCellNameLabelTag = 3;
-static NSUInteger const kPAPCellAvatarTag = 4;
-static NSUInteger const kPAPCellPhotoNumLabelTag = 5;
+//static NSUInteger const kPAPCellFollowTag = 2;
+//static NSUInteger const kPAPCellNameLabelTag = 3;
+//static NSUInteger const kPAPCellAvatarTag = 4;
+//static NSUInteger const kPAPCellPhotoNumLabelTag = 5;
 
 @implementation PAPFindFriendsViewController
 @synthesize headerView;
