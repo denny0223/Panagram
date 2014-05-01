@@ -145,7 +145,6 @@
 		C4F101FD156C35EE0061BC3E /* CellLoadMore@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C4F101FB156C35EE0061BC3E /* CellLoadMore@2x.png */; };
 		C4F10291156C571C0061BC3E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C4F1028D156C571B0061BC3E /* AppDelegate.m */; };
 		C4F10292156C571C0061BC3E /* PAPUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C4F10290156C571C0061BC3E /* PAPUtility.m */; };
-		C4F102A0156C574A0061BC3E /* PAPImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C4F1029D156C57490061BC3E /* PAPImageView.m */; };
 		C4F102A1156C574A0061BC3E /* PAPProfileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C4F1029F156C574A0061BC3E /* PAPProfileImageView.m */; };
 		C4F102A4156C57560061BC3E /* PAPPhotoHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C4F102A3156C57560061BC3E /* PAPPhotoHeaderView.m */; };
 		C4F102A9156C57620061BC3E /* PAPPhotoDetailsFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = C4F102A6156C57620061BC3E /* PAPPhotoDetailsFooterView.m */; };
@@ -169,6 +168,7 @@
 		C4F102E2156C58440061BC3E /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = C4F102DF156C58440061BC3E /* Entitlements.plist */; };
 		C4F102E7156C58570061BC3E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C4F102E5156C58570061BC3E /* InfoPlist.strings */; };
 		C4F102EF156C58E00061BC3E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C4F102EC156C58E00061BC3E /* main.m */; };
+		D40AF7BC1911759B004A32F5 /* UIImageViewModeScaleAspect.m in Sources */ = {isa = PBXBuildFile; fileRef = D40AF7BB1911759B004A32F5 /* UIImageViewModeScaleAspect.m */; };
 		D448A0AF190D9682000D7D8C /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D448A0AE190D9682000D7D8C /* Parse.framework */; };
 		D448A0B1190D968B000D7D8C /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D448A0B0190D968B000D7D8C /* FacebookSDK.framework */; };
 		E7ADD50E17BEA09500E975E2 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = E7ADD4B617BEA09500E975E2 /* MBProgressHUD.m */; };
@@ -328,8 +328,6 @@
 		C4F1028E156C571B0061BC3E /* PAPConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = PAPConstants.h; path = Anypic/PAPConstants.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C4F1028F156C571B0061BC3E /* PAPUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PAPUtility.h; path = Anypic/PAPUtility.h; sourceTree = SOURCE_ROOT; };
 		C4F10290156C571C0061BC3E /* PAPUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = PAPUtility.m; path = Anypic/PAPUtility.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		C4F1029C156C57490061BC3E /* PAPImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PAPImageView.h; path = Anypic/PAPImageView.h; sourceTree = SOURCE_ROOT; };
-		C4F1029D156C57490061BC3E /* PAPImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PAPImageView.m; path = Anypic/PAPImageView.m; sourceTree = SOURCE_ROOT; };
 		C4F1029E156C57490061BC3E /* PAPProfileImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PAPProfileImageView.h; path = Anypic/PAPProfileImageView.h; sourceTree = SOURCE_ROOT; };
 		C4F1029F156C574A0061BC3E /* PAPProfileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PAPProfileImageView.m; path = Anypic/PAPProfileImageView.m; sourceTree = SOURCE_ROOT; };
 		C4F102A2156C57560061BC3E /* PAPPhotoHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PAPPhotoHeaderView.h; path = Anypic/PAPPhotoHeaderView.h; sourceTree = SOURCE_ROOT; };
@@ -375,6 +373,8 @@
 		C4F102EB156C58E00061BC3E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		C4F102EC156C58E00061BC3E /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
 		C4F102ED156C58E00061BC3E /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = SOURCE_ROOT; };
+		D40AF7BA1911759B004A32F5 /* UIImageViewModeScaleAspect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIImageViewModeScaleAspect.h; path = Anypic/UIImageViewModeScaleAspect.h; sourceTree = SOURCE_ROOT; };
+		D40AF7BB1911759B004A32F5 /* UIImageViewModeScaleAspect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIImageViewModeScaleAspect.m; path = Anypic/UIImageViewModeScaleAspect.m; sourceTree = SOURCE_ROOT; };
 		D448A0AE190D9682000D7D8C /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = ../../../../../../Documents/Parse.framework; sourceTree = "<group>"; };
 		D448A0B0190D968B000D7D8C /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../../../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		E7ADD4B217BEA09500E975E2 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
@@ -481,6 +481,8 @@
 		09ABC07713A1D52D009C3FCF /* Anypic */ = {
 			isa = PBXGroup;
 			children = (
+				D40AF7BA1911759B004A32F5 /* UIImageViewModeScaleAspect.h */,
+				D40AF7BB1911759B004A32F5 /* UIImageViewModeScaleAspect.m */,
 				E7ADD51917BEA34A00E975E2 /* Categories */,
 				C4A89497155879FC00DC57D3 /* Views */,
 				C4A89496155879F600DC57D3 /* Controllers */,
@@ -740,8 +742,6 @@
 				74A504E21565F0C200CFA4E3 /* UITableViewCells */,
 				C4F102B7156C57B90061BC3E /* PAPSettingsButtonItem.h */,
 				C4F102B8156C57B90061BC3E /* PAPSettingsButtonItem.m */,
-				C4F1029C156C57490061BC3E /* PAPImageView.h */,
-				C4F1029D156C57490061BC3E /* PAPImageView.m */,
 				C4F1029E156C57490061BC3E /* PAPProfileImageView.h */,
 				C4F1029F156C574A0061BC3E /* PAPProfileImageView.m */,
 			);
@@ -1024,11 +1024,11 @@
 			files = (
 				C4F10291156C571C0061BC3E /* AppDelegate.m in Sources */,
 				C4F10292156C571C0061BC3E /* PAPUtility.m in Sources */,
-				C4F102A0156C574A0061BC3E /* PAPImageView.m in Sources */,
 				C4F102A1156C574A0061BC3E /* PAPProfileImageView.m in Sources */,
 				E7ADD51A17BEA36500E975E2 /* UIImage+AlphaAdditions.m in Sources */,
 				C4F102A4156C57560061BC3E /* PAPPhotoHeaderView.m in Sources */,
 				C4F102A9156C57620061BC3E /* PAPPhotoDetailsFooterView.m in Sources */,
+				D40AF7BC1911759B004A32F5 /* UIImageViewModeScaleAspect.m in Sources */,
 				C4F102AA156C57620061BC3E /* PAPPhotoDetailsHeaderView.m in Sources */,
 				E7ADD51117BEA09500E975E2 /* TTTTimeIntervalFormatter.m in Sources */,
 				C4F102B3156C57820061BC3E /* PAPActivityCell.m in Sources */,
@@ -1134,6 +1134,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
@@ -1151,6 +1152,8 @@
 					DEBUG,
 					TESTING,
 				);
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Anypic;
@@ -1163,6 +1166,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
@@ -1175,6 +1179,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Prefix.pch;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Anypic;
@@ -1215,6 +1221,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
@@ -1228,6 +1235,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = TESTING;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Anypic;
@@ -1268,6 +1277,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_OBJC_UNUSED_IVARS = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
@@ -1281,6 +1291,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = TESTING;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Anypic;
