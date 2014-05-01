@@ -402,4 +402,40 @@
     [navigationController.navigationBar addSubview:gradientView];	    
 }
 
++ (void)updateScrollView:(UIScrollView *)scrollView andImageView:(UIView *)imageView withImage:(UIImage *)image
+{
+    [PAPUtility updateScrollView:scrollView andImageView:imageView withImage:image zoomedIn:YES];
+}
+
++ (void)updateScrollView:(UIScrollView *)scrollView andImageView:(UIView *)imageView withImage:(UIImage *)image zoomedIn:(BOOL)zoomedIn
+{
+    if (scrollView && imageView){
+        CGPoint scrollViewContentOffset = CGPointZero;
+        CGSize scrollViewContentSize = scrollView.frame.size;
+        UIViewContentMode scaleMode = UIViewContentModeScaleAspectFit;
+        CGFloat PICTURE_FRAME_WIDTH = 280.0f;
+        
+        if ( zoomedIn && image ){
+            CGFloat scrollWidth = scrollView.frame.size.width;
+            CGFloat scrollHeight = scrollView.frame.size.height;
+            CGFloat scrollRatio = scrollWidth/scrollHeight;
+            CGFloat imageHeight = image.size.height;
+            CGFloat imageWidth = image.size.width;
+            CGFloat imageRatio = imageWidth/imageHeight;
+            if (imageRatio > scrollRatio)
+            {
+                CGFloat scaleRatio = scrollView.frame.size.height / image.size.height;
+                CGFloat scaledImageWidth = image.size.width*scaleRatio;
+                scaleMode = UIViewContentModeScaleAspectFill;
+                scrollViewContentSize = CGSizeMake(scaledImageWidth, PICTURE_FRAME_WIDTH);
+                scrollViewContentOffset = CGPointMake(scaledImageWidth/2-PICTURE_FRAME_WIDTH/2, 0.0f);
+            }
+        }
+        [scrollView setContentSize:scrollViewContentSize];
+        [scrollView setContentOffset:scrollViewContentOffset];
+        imageView.frame = scrollView.bounds;
+        [imageView setContentMode:scaleMode];
+    }
+}
+
 @end

@@ -9,6 +9,8 @@
 @class PFImageView;
 @interface PAPPhotoCell : PFTableViewCell
 
-@property (nonatomic, strong) UIButton *photoButton;
+@property (nonatomic, strong) UIScrollView *scrollView;
+
+- (void) updateScrollViewWidthWithImage:(UIImage*) image;
 
 @end

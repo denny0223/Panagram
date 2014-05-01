@@ -30,4 +30,8 @@
 + (void)addBottomDropShadowToNavigationBarForNavigationController:(UINavigationController *)navigationController;
 
 + (PFQuery *)queryForActivitiesOnPhoto:(PFObject *)photo cachePolicy:(PFCachePolicy)cachePolicy;
+
++ (void)updateScrollView:(UIScrollView *) scrollView andImageView:(UIView *) imageView withImage:(UIImage *)image zoomedIn:(BOOL)zoomedIn;
+
++ (void)updateScrollView:(UIScrollView *) scrollView andImageView:(UIView *) imageView withImage:(UIImage *)image;
 @end

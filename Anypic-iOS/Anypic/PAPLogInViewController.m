@@ -42,8 +42,13 @@
     [self.logInView setLogo:nil];
     [self.logInView addSubview:textLabel];
     
-    self.fields = PFLogInFieldsUsernameAndPassword;
-    self.logInView.usernameField.placeholder = @"Enter your email";
+//    self.fields = PFLogInFieldsUsernameAndPassword;
+//    self.logInView.usernameField.placeholder = @"Enter your email";
+}
+
+- (void)viewDidLayoutSubviews {
+    [self.logInView.facebookButton setTitle:@"" forState:UIControlStateNormal];
+    [self.logInView.facebookButton setImage:nil forState:UIControlStateNormal];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {

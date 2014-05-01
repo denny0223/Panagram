@@ -329,10 +329,14 @@
 
         if (cell == nil) {
             cell = [[PAPPhotoCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-            [cell.photoButton addTarget:self action:@selector(didTapOnPhotoAction:) forControlEvents:UIControlEventTouchUpInside];
+            UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnPhotoAction:)];
+            singleTapGestureRecognizer.numberOfTapsRequired = 1;
+            singleTapGestureRecognizer.enabled = YES;
+            singleTapGestureRecognizer.cancelsTouchesInView = NO;
+            [cell.scrollView addGestureRecognizer:singleTapGestureRecognizer];
         }
 
-        cell.photoButton.tag = indexPath.section;
+        cell.tag = indexPath.section;
         cell.imageView.image = [UIImage imageNamed:@"PlaceholderPhoto.png"];
         
         if (object) {
@@ -340,7 +344,9 @@
             
             // PFQTVC will take care of asynchronously downloading files, but will only load them when the tableview is not moving. If the data is there, let's load it right away.
             if ([cell.imageView.file isDataAvailable]) {
-                [cell.imageView loadInBackground];
+                [cell.imageView loadInBackground:^(UIImage *image, NSError *error) {
+                    [cell updateScrollViewWidthWithImage:image];
+                }];
             }
         }
 
@@ -486,8 +492,8 @@
 }
 
 
-- (void)didTapOnPhotoAction:(UIButton *)sender {
-    PFObject *photo = [self.objects objectAtIndex:sender.tag];
+- (void)didTapOnPhotoAction:(UITapGestureRecognizer *)sender {
+    PFObject *photo = [self.objects objectAtIndex:sender.view.tag];
     if (photo) {
         PAPPhotoDetailsViewController *photoDetailsVC = [[PAPPhotoDetailsViewController alloc] initWithPhoto:photo];
         [self.navigationController pushViewController:photoDetailsVC animated:YES];

@@ -10,7 +10,7 @@
 #import "PAPUtility.h"
 
 @implementation PAPPhotoCell
-@synthesize photoButton;
+@synthesize scrollView;
 
 #pragma mark - NSObject
 
@@ -38,28 +38,39 @@
         layer.shadowOffset = CGSizeMake( 0.0f, 1.0f);
         layer.shouldRasterize = YES;
         
-        self.imageView.frame = CGRectMake( 20.0f, 0.0f, 280.0f, 280.0f);
         self.imageView.backgroundColor = [UIColor blackColor];
-        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [self.imageView setFrame:CGRectMake(0.0f,0.0f,280.f,280.f)];
+        [self.imageView removeFromSuperview];
         
-        self.photoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.photoButton.frame = CGRectMake( 20.0f, 0.0f, 280.0f, 280.0f);
-        self.photoButton.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:self.photoButton];
+        self.scrollView = [[UIScrollView alloc] initWithFrame: CGRectMake( 20.0f, 0.0f, 280.0f, 280.0f)];
+        [self.scrollView setBounces:false];
+
+
+        [self.scrollView addSubview:self.imageView];
         
-        [self.contentView bringSubviewToFront:self.imageView];
+        [self.contentView addSubview:self.scrollView];
+        
+        [self.contentView bringSubviewToFront:self.scrollView];
     }
 
     return self;
 }
 
 
+
 #pragma mark - UIView
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.imageView.frame = CGRectMake( 20.0f, 0.0f, 280.0f, 280.0f);
-    self.photoButton.frame = CGRectMake( 20.0f, 0.0f, 280.0f, 280.0f);
+    [self updateScrollViewWidthWithImage:self.imageView.image];
+}
+
+
+#pragma mark - PAPPhotoCell
+
+- (void) updateScrollViewWidthWithImage:(UIImage *)image
+{
+    [PAPUtility updateScrollView:self.scrollView andImageView:self.imageView withImage:image];
 }
 
 @end

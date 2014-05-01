@@ -8,7 +8,7 @@
 
 @protocol PAPPhotoDetailsHeaderViewDelegate;
 
-@interface PAPPhotoDetailsHeaderView : UIView
+@interface PAPPhotoDetailsHeaderView : UIView <UIScrollViewDelegate>
 
 /*! @name Managing View Properties */
 

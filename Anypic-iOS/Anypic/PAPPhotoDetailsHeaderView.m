@@ -9,6 +9,7 @@
 #import "PAPPhotoDetailsHeaderView.h"
 #import "PAPProfileImageView.h"
 #import "TTTTimeIntervalFormatter.h"
+#import "UIImageViewModeScaleAspect.h"
 
 #define baseHorizontalOffset 20.0f
 #define baseWidth 280.0f
@@ -62,9 +63,11 @@
 
 // View components
 @property (nonatomic, strong) UIView *nameHeaderView;
-@property (nonatomic, strong) PFImageView *photoImageView;
+@property (nonatomic, strong) UIImageViewModeScaleAspect *photoImageView;
+@property (nonatomic, strong) UIScrollView *photoScrollView;
 @property (nonatomic, strong) UIView *likeBarView;
 @property (nonatomic, strong) NSMutableArray *currentLikeAvatars;
+@property (nonatomic, assign) BOOL isFilled;
 
 // Redeclare for edit
 @property (nonatomic, strong, readwrite) PFUser *photographer;
@@ -84,6 +87,8 @@ static TTTTimeIntervalFormatter *timeFormatter;
 @synthesize likeUsers;
 @synthesize nameHeaderView;
 @synthesize photoImageView;
+@synthesize photoScrollView;
+@synthesize isFilled;
 @synthesize likeBarView;
 @synthesize likeButton;
 @synthesize delegate;
@@ -102,6 +107,7 @@ static TTTTimeIntervalFormatter *timeFormatter;
         self.photo = aPhoto;
         self.photographer = [self.photo objectForKey:kPAPPhotoUserKey];
         self.likeUsers = nil;
+        self.isFilled = YES;
         
         self.backgroundColor = [UIColor clearColor];
         [self createView];
@@ -122,6 +128,7 @@ static TTTTimeIntervalFormatter *timeFormatter;
         self.likeUsers = theLikeUsers;
         
         self.backgroundColor = [UIColor clearColor];
+        self.isFilled = YES;
 
         if (self.photo && self.photographer && self.likeUsers) {
             [self createView];
@@ -217,19 +224,35 @@ static TTTTimeIntervalFormatter *timeFormatter;
     /*
      Create middle section of the header view; the image
      */
-    self.photoImageView = [[PFImageView alloc] initWithFrame:CGRectMake(mainImageX, mainImageY, mainImageWidth, mainImageHeight)];
+    self.photoImageView = [[UIImageViewModeScaleAspect alloc] initWithFrame:CGRectMake(0, 0, mainImageWidth, mainImageHeight)];
     self.photoImageView.image = [UIImage imageNamed:@"PlaceholderPhoto.png"];
     self.photoImageView.backgroundColor = [UIColor blackColor];
     self.photoImageView.contentMode = UIViewContentModeScaleAspectFit;
     
+    self.photoScrollView = [[UIScrollView alloc] initWithFrame: CGRectMake(mainImageX, mainImageY, mainImageWidth, mainImageHeight)];
+    [self.photoScrollView setBounces:false];
+    [self.photoScrollView addSubview:self.photoImageView];
+    [self.photoScrollView setDelegate:self];
+    
+    [self updateViewsToFill:self.isFilled animated:NO];
+    
     PFFile *imageFile = [self.photo objectForKey:kPAPPhotoPictureKey];
 
     if (imageFile) {
-        self.photoImageView.file = imageFile;
-        [self.photoImageView loadInBackground];
+        self.photoImageView.img.file = imageFile;
+
+        [self.photoImageView.img loadInBackground:^(UIImage *image, NSError *error) {
+            [self updateViewsToFill:self.isFilled animated:NO];
+        }];
     }
+
+    [self addSubview:self.photoScrollView];
     
-    [self addSubview:self.photoImageView];
+    UITapGestureRecognizer *doubleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnPhotoAction:)];
+    doubleTapGestureRecognizer.numberOfTapsRequired = 2;
+    doubleTapGestureRecognizer.enabled = YES;
+    doubleTapGestureRecognizer.cancelsTouchesInView = NO;
+    [self.photoScrollView addGestureRecognizer:doubleTapGestureRecognizer];
     
     /*
      Create top of header view with name and avatar
@@ -339,6 +362,91 @@ static TTTTimeIntervalFormatter *timeFormatter;
     [likeBarView addSubview:separator];    
 }
 
+- (void)didTapOnPhotoAction:(UITapGestureRecognizer *)sender {
+    NSLog(@"Currently %@", (self.isFilled ? @"unzooming": @"zooming"));
+    
+    self.isFilled = !self.isFilled;
+    [self updateViewsToFill:isFilled animated:YES];
+    
+}
+
+- (void) updateViewsToFill:(BOOL) fill animated:(BOOL) animated
+{
+    
+    CGPoint scrollViewContentOffset = CGPointZero;
+    CGSize scrollViewContentSize = self.photoScrollView.frame.size;
+    CGFloat PICTURE_FRAME_WIDTH_HEIGHT = 280.0f;
+    
+    if ( fill ){
+        CGFloat scrollWidth = self.photoScrollView.frame.size.width;
+        CGFloat scrollHeight = self.photoScrollView.frame.size.height;
+        CGFloat scrollRatio = scrollWidth/scrollHeight;
+        CGFloat imageHeight = self.photoImageView.image.size.height;
+        CGFloat imageWidth = self.photoImageView.image.size.width;
+        CGFloat imageRatio = imageWidth/imageHeight;
+        if (imageRatio > scrollRatio)
+        {
+            CGFloat scaleRatio = self.photoScrollView.frame.size.height / self.photoImageView.image.size.height;
+            CGFloat scaledImageWidth = self.photoImageView.image.size.width*scaleRatio;
+            scrollViewContentSize = CGSizeMake(scaledImageWidth, PICTURE_FRAME_WIDTH_HEIGHT);
+            scrollViewContentOffset = CGPointMake(scaledImageWidth/2-PICTURE_FRAME_WIDTH_HEIGHT/2, 0.0f);
+        }
+    }
+    
+    if ( fill )
+    {
+        [self setToFill:scrollViewContentSize offsetPoint:scrollViewContentOffset animated:animated];
+    } else
+    {
+        [self setToFit:scrollViewContentSize offsetPoint:scrollViewContentOffset animated:animated];
+    }
+}
+
+- (void) setToFill:(CGSize)contentSize offsetPoint:(CGPoint)point animated:(BOOL)animated
+{
+    [self.photoScrollView setContentSize:contentSize];
+
+    if (YES){
+        [self.photoImageView initToScaleAspectFillToFrame:CGRectMake(0,0,contentSize.width,contentSize.height)];
+        
+        [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionAllowUserInteraction
+                         animations:^{
+                            self.photoScrollView.contentOffset = point;
+                             [self.photoImageView animaticToScaleAspectFill];
+                         } completion:^(BOOL finished) {
+                             [self.photoImageView animateFinishToScaleAspectFill];
+                         }];
+    }
+    else
+    {
+        self.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.photoScrollView.contentOffset = point;
+        self.photoImageView.img.frame = self.photoScrollView.bounds;
+    }
+}
+
+- (void) setToFit:(CGSize)contentSize offsetPoint:(CGPoint)point animated:(BOOL)animated
+{
+    if (animated){
+        [self.photoImageView initToScaleAspectFitToFrame:CGRectMake(0,0,contentSize.width,contentSize.height)];
+        
+        [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionAllowUserInteraction
+                         animations:^{
+                             self.photoScrollView.contentOffset = point;
+                             [self.photoImageView animaticToScaleAspectFit];
+                         } completion:^(BOOL finished) {
+                             [self.photoImageView animateFinishToScaleAspectFit];
+                         }];
+    }
+    else
+    {
+        self.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.photoScrollView.contentOffset = point;
+        self.photoImageView.img.frame = self.photoScrollView.bounds;
+    }
+    [self.photoScrollView setContentSize:contentSize];
+}
+
 - (void)didTapLikePhotoButtonAction:(UIButton *)button {
     BOOL liked = !button.selected;
     [button removeTarget:self action:@selector(didTapLikePhotoButtonAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -398,5 +506,7 @@ static TTTTimeIntervalFormatter *timeFormatter;
         [delegate photoDetailsHeaderView:self didTapUserButton:button user:self.photographer];
     }    
 }
+
+
 
 @end
