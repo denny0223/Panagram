@@ -67,7 +67,7 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [self dismissViewControllerAnimated:NO completion:nil];
     
-    UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
      
     PAPEditPhotoViewController *viewController = [[PAPEditPhotoViewController alloc] initWithImage:image];
     [viewController setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
@@ -141,7 +141,7 @@
         return NO;
     }
     
-    cameraUI.allowsEditing = YES;
+//    cameraUI.allowsEditing = YES;
     cameraUI.showsCameraControls = YES;
     cameraUI.delegate = self;
 
@@ -174,7 +174,7 @@
         return NO;
     }
     
-    cameraUI.allowsEditing = YES;
+//    cameraUI.allowsEditing = YES;
     cameraUI.delegate = self;
     
     [self presentViewController:cameraUI animated:YES completion:nil];

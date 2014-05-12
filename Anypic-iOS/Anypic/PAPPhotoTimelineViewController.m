@@ -336,7 +336,7 @@
             [cell.scrollView addGestureRecognizer:singleTapGestureRecognizer];
         }
 
-        cell.tag = indexPath.section;
+        cell.scrollView.tag = indexPath.section;
         cell.imageView.image = [UIImage imageNamed:@"PlaceholderPhoto.png"];
         
         if (object) {
