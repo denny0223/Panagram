@@ -2,7 +2,7 @@ $(function() {
   Parse.$ = jQuery;
 
   //  Copy your application id and JavaScript Key into the following line, and uncomment it.
-  //  Parse.initialize("APPLICATION_ID", "JAVASCRIPT_KEY");
+  Parse.initialize("cLXA3EhzyvWXitzfo8VNlqFEetDG9vKQgt87P85F", "khkNsvQleaXtJG59RCR1UPLryO66HenEP8xaBfaN");
 
   // Photo Model
   // -----------
@@ -42,16 +42,16 @@ $(function() {
   var PhotoView = Parse.View.extend({  
     template: _.template($("#photo-template").html()),
     render: function() {
-      $(this.el).html(this.template({
-        "photo_url": this.model.photoURL(),
-        "photo_image_url": this.model.photoImageURL(),
-        "avatar_image_url": this.model.avatarImageURL(),
-        "display_name": this.model.displayName()      
-      }));
+        $(this.el).html(this.template({
+            "photo_url": this.model.photoURL(),
+            "photo_image_url": this.model.photoImageURL(),
+            "avatar_image_url": this.model.avatarImageURL(),
+            "display_name": this.model.displayName()
+        }));
 
-      return this;
+        return this;
     }
-  });
+});
    
   // Latest Photos View
   var LatestPhotosView = Parse.View.extend({
@@ -69,7 +69,7 @@ $(function() {
 
       // Only show photos uploaded by Parse employees
       var userQuery = new Parse.Query(Parse.User);
-      userQuery.containedIn("objectId", [ "qOnj6eZPls", "AfQj8ksNwf", "46RvD6FsBS", "JDEuetLDXN", "Qi4eOJgPfi", "4MTgLcPMn2", "jX2d8bhb0S", "uco0D9h9KJ", "xgkncrHTZJ", "uTsAcCyPyZ", "7oTcL0tY1u", "kFk2qAJ4xO" ]);
+      userQuery.containedIn("objectId", [ "2Cmnr4sQIT", "1hLRFH9KtTf", "FxNXlAbjxn", "JDEuetLDXN", "Qi4eOJgPfi", "4MTgLcPMn2", "jX2d8bhb0S", "uco0D9h9KJ", "xgkncrHTZJ", "uTsAcCyPyZ", "7oTcL0tY1u", "kFk2qAJ4xO" ]);
       this.photos.query = new Parse.Query(Photo);
       this.photos.query.include("user");
       this.photos.query.matchesQuery("user", userQuery);

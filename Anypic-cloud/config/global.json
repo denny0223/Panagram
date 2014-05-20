@@ -1,11 +1,11 @@
 {
     "applications": {
-        "Anypic": {
-            "applicationId": "YOUR_PARSE_APP_ID", 
-            "masterKey": "YOUR_PARSE_APP_MASTER_KEY"
+        "Panagram": {
+            "applicationId": "cLXA3EhzyvWXitzfo8VNlqFEetDG9vKQgt87P85F", 
+            "masterKey": "qAoBO5vBn4RYXOwjSqlI4OPCOCJZ3KFZoxil0Wjh"
         }, 
         "_default": {
-            "link": "Anypic"
+            "link": "Panagram"
         }
     }, 
     "global": {

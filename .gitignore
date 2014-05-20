@@ -18,3 +18,5 @@ Resources/Configuration/Private.xcconfig
 .DS_Store
 .pid_file
 .sass-cache
+*bower_components
+*.idea
