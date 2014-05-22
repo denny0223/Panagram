@@ -21,17 +21,20 @@ Parse.Cloud.beforeSave(Parse.User, function (request, response) {
             return;
         }
 
-        var facebookId = user.get(facebookIdKey);
+        var facebookId = request.object.get(facebookIdKey);
         var url = "https://graph.facebook.com/"+facebookId+"/picture?width=320&height=320";
+        console.log("Trying to get url:" + url);
 
         Parse.Cloud.httpRequest({
             url: url
         }).then(function (response) {
+            console.log("Got url");
             var promises = [];
             promises.push(scaleAndSave(response.buffer, 64, thumbnailJpg, thumbnailKey));
             promises.push(scaleAndSave(response.buffer, 280, pictureJpg, pictureKey));
             return Parse.Promise.when(promises);
         }).then(function (result) {
+            console.log("Scaled. We are done!");
             response.success();
         }, function (error) {
             response.error(error);
@@ -39,6 +42,7 @@ Parse.Cloud.beforeSave(Parse.User, function (request, response) {
 
 
         var scaleAndSave = function (imageData, resolution, filename, propertyName) {
+            console.log("Got url");
             var mImage = new Image();
             return mImage.setData(imageData).then(function(image){
                 // Crop the image to the smaller of width or height.
