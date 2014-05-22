@@ -63,6 +63,7 @@ NSString *const kPAPUserFacebookIDKey                           = @"facebookId";
 NSString *const kPAPUserPhotoIDKey                              = @"photoId";
 NSString *const kPAPUserProfilePicSmallKey                      = @"profilePictureSmall";
 NSString *const kPAPUserProfilePicMediumKey                     = @"profilePictureMedium";
+NSString *const kPAPUserProfilePicUrlKey                        = @"profilePictureUrl";
 NSString *const kPAPUserFacebookFriendsKey                      = @"facebookFriends";
 NSString *const kPAPUserAlreadyAutoFollowedFacebookFriendsKey   = @"userAlreadyAutoFollowedFacebookFriends";
 

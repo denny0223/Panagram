@@ -11,8 +11,6 @@
 + (void)likePhotoInBackground:(id)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 + (void)unlikePhotoInBackground:(id)photo block:(void (^)(BOOL succeeded, NSError *error))completionBlock;
 
-+ (void)processFacebookProfilePictureData:(NSData *)data;
-
 + (BOOL)userHasValidFacebookData:(PFUser *)user;
 + (BOOL)userHasProfilePictures:(PFUser *)user;
 

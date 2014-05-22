@@ -8,25 +8,21 @@ Parse.Cloud.beforeSave(Parse.User, function (request, response) {
         var pictureJpg = "profilePicture.jpg";
         var thumbnailKey = "profilePictureSmall";
         var pictureKey = "profilePictureMedium";
-        var urlKey = "profilePictureUrl";
+        var facebookIdKey = "facebookId";
 
         if (user.dirty(thumbnailKey) || user.dirty(pictureKey)){
             response.error("You cannot set the pictures directly!");
             return;
         }
 
-        if (!user.dirty(urlKey)) {
+        if (!user.dirty(facebookIdKey)) {
             // The profile photo isn't being modified.
             response.success();
             return;
         }
 
-        var url = user.get(urlKey);
-        var facebookAkamai = "https://fbcdn-profile-a.akamaihd.net/"
-        if (!(url.substring(0, facebookAkamai.length) === facebookAkamai)) {
-            response.error();
-            return;
-        }
+        var facebookId = user.get(facebookIdKey);
+        var url = "https://graph.facebook.com/"+facebookId+"/picture?width=320&height=320";
 
         Parse.Cloud.httpRequest({
             url: url

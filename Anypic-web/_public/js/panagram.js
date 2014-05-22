@@ -12,30 +12,6 @@ $(function () {
             version: 'v1.0'
             // parse XFBML
         });
-        updateFacebookPicture();
-    };
-
-    var updateFacebookPicture = function(){
-        if (Parse.User.current()) {
-            FB.api(
-                "/me/picture?height=320&width=320",
-                function (response) {
-                    if (response && !response.error) {
-                        var data = response.data;
-                        if (data && data.url) {
-                            data = data.url;
-                            var oldData = Parse.User.current().get("profilePictureUrl");
-                            if (data.length > 0 && !(data === oldData)) {
-
-                                Parse.User.current().set("profilePictureUrl", data);
-                                Parse.User.current().save();
-
-                            }
-                        }
-                    }
-                }
-            );
-        }
     };
 
 
@@ -253,7 +229,6 @@ $(function () {
                                     }
                                     Parse.User.current().save();
                                 }
-                                updateFacebookPicture();
                                 new TimelineView();
                                 self.undelegateEvents();
                                 delete this;
