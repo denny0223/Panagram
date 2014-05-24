@@ -26,13 +26,14 @@
 
     <script src="js/jquery.js"></script>
     <script src="js/jquery.timeago.js"></script>
+    <script src="js/jquery.unveil.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/rx.lite.js"></script>
     <script src="js/rx.jquery.js"></script>
     <script src="js/underscore.js"></script>
     <script src="js/parse-1.2.18.js"></script>
+    <script src="js/backbone.js"></script>
     <script src="js/panagram.js"></script>
-    <script src="js/backbone.paginator.js"></script>
 </head>
 
 <body role="document">
@@ -52,7 +53,7 @@
                 <a class="navbar-brand" href="#">Panagram</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <div class="logout-navbar"></div>
+                <div class="user-signin-navbar"></div>
             </div>
         </div>
     </div>
@@ -68,47 +69,74 @@
 
 
 <!-- Templates -->
-<script type="text/template" id="login-template">
-    <h1>Hello, world!</h1>
-
-    <p>This is a template for a simple marketing or informational website. It includes a large callout called a
-        jumbotron and three supporting pieces of content. Use it as a starting point to create something more
-        unique.</p>
-    <p><a id="facebook-sign-in" class="btn btn-primary btn-lg" role="button">Sign in</a></p>
-</script>
-
 <script type="text/template" id="timeline-template">
     <ul id="photo-list">
     </ul>
 </script>
 
 <script type="text/template" id="photo-template">
-    <div class="row">
+    <div class="row" id="<%= photo_id %>">
         <div class="timeline-photo-panel col-sm-12 col-md-9 col-centered">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><%= display_name %></h3>
-                    <abbr class="timeago" title="<%= created_at %>"></abbr>
+                    <div class="photo-panel-avatar">
+                        <img data-src='<%= avatar_image_url %>'/>
+                    </div>
+                    <div class="photo-panel-info">
+                        <h3 class="panel-title"><%= display_name %></h3>
+                        <abbr class="timeago" title="<%= created_at %>"><%= $.timeago(created_at) %></abbr>
+                    </div>
                 </div>
                 <div class="panel-body timeline-photo">
-                    <a href="<%= photo_url %>"><img class="img-thumbnail" src='<%= photo_image_url %>'/></a>
+                    <a href="<%= photo_url %>"><img class="img-thumbnail unloaded-image" data-src='<%= photo_image_url %>'/></a>
                 </div>
+
             </div>
         </div>
     </div>
 </script>
 
-<!-- Template used by single photo landing page -->
 <script type="text/template" id="big-photo-template">
-    <div id="photo-container">
-        <div id="author">
-            <div class="avatar">
-                <img src='<%= avatar_image_url %>'/>
+    <div class="row" >
+        <div class="big-photo-panel">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="photo-panel-avatar">
+                        <img src='<%= avatar_image_url %>'/>
+                    </div>
+                    <div class="photo-panel-info">
+                        <h3 class="panel-title"><%= display_name %></h3>
+                        <abbr class="timeago" title="<%= created_at %>"><%= $.timeago(created_at) %></abbr>
+                    </div>
+                </div>
+                <div class="panel-body big-photo">
+                    <img class="img-big-photo" src='<%= photo_image_url %>'/>
+                </div>
+
             </div>
-            <h1><%= display_name %></h1>
         </div>
-        <img src='<%= photo_image_url %>' class="photo"/>
     </div>
+</script>
+
+<!--&lt;!&ndash; Template used by single photo landing page &ndash;&gt;-->
+<!--<script type="text/template" id="big-photo-template">-->
+    <!--<div id="photo-container">-->
+        <!--<div id="author">-->
+            <!--<div class="avatar">-->
+                <!--<img src='<%= avatar_image_url %>'/>-->
+            <!--</div>-->
+            <!--<h1><%= display_name %></h1>-->
+        <!--</div>-->
+        <!--<img src='<%= photo_image_url %>' class="photo"/>-->
+    <!--</div>-->
+<!--</script>-->
+
+<script type="text/template" id="login-navbar-template">
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <a href="" id="facebook-sign-in">Sign in</a>
+        </li>
+    </ul>
 </script>
 
 <script type="text/template" id="logout-navbar-template">
@@ -121,6 +149,13 @@
             </ul>
         </li>
     </ul>
+</script>
+
+<script type="text/template" id="welcome-template">
+    <div class="jumbotron">
+        <h1>Welcome to Panagram!</h1>
+        <p>Panagram is based on <a href="https://github.com/ParsePlatform/Anypic">Parse's Anypic</a> and was used as a learning experience for two Computer Science students at UCSB.</p>
+    </div>
 </script>
 
 

@@ -13,18 +13,33 @@ body {
     margin: 5px 0;
 }
 
+.big-photo {
+    max-width: 100%;
+    padding: 5px 5px 5px 5px;
+}
+
+.big-photo img {
+    max-width: 100%;
+    display: block;
+    height: auto;
+    margin: auto;
+}
+
 .timeline-photo {
     max-width: 100%;
-    max-height: 100%;
     padding: 5px 5px 5px 5px;
 }
 
 .timeline-photo img {
     max-width: 100%;
-    max-height: 100%;
+    max-height: 512px;
     display: block;
     height: auto;
     margin: auto;
+}
+
+.timeline-photo img.unloaded-image {
+    min-height: 250px;
 }
 
 .col-centered{
@@ -37,3 +52,18 @@ body {
         width: 970px;
     }
 }
+
+div.photo-panel-info {
+    display: inline-block
+}
+
+div.photo-panel-avatar {
+    display: inline-block
+}
+
+div.photo-panel-avatar img{
+    height: 40px;
+    vertical-align: bottom;
+}
+
+

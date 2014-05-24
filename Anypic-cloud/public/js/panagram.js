@@ -39,9 +39,14 @@ $(function () {
         createdTime: function() {
             return this.createdAt;
         },
+
+        photoId: function() {
+            return this.id;
+        },
+
         avatarImageURL: function() {
-            if (this.get("user").get("profilePictureMedium")) {
-                return this.get("user").get("profilePictureMedium").url().replace(/http:\/\//,"https://s3.amazonaws.com/");
+            if (this.get("user").get("profilePictureSmall")) {
+                return this.get("user").get("profilePictureSmall").url().replace(/http:\/\//,"https://s3.amazonaws.com/");
             }
 
             return "";
@@ -60,14 +65,16 @@ $(function () {
     var PhotoView = Parse.View.extend({
         template: _.template($("#photo-template").html()),
         render: function() {
-            $(this.el).html(this.template({
+            this.$el.html(this.template({
+                "photo_id": this.model.photoId(),
                 "photo_url": this.model.photoURL(),
                 "photo_image_url": this.model.photoImageURL(),
                 "avatar_image_url": this.model.avatarImageURL(),
                 "display_name": this.model.displayName(),
                 "created_at": this.model.createdTime()
             }));
-
+            var self = this;
+            _.delay(function(){self.$el.find("img").unveil(200, function(){$(this).removeClass("unloaded-image")});},250);
             return this;
         }
     });
@@ -76,43 +83,153 @@ $(function () {
     var SinglePhotoView = Parse.View.extend({
 
         template: _.template($("#big-photo-template").html()),
-        metaDataLandingPageTemplate: _.template($("#meta-landingpage-template").html()),
 
-        render: function() {
-            $('head meta[property*="og:"]').remove();
-            $('head').append(this.metaDataLandingPageTemplate({
-                "photo_image_url": this.model.photoImageURL(),
-                "photo_caption": "Shared a photo on Anypic",
-                "page_url": "http://www.anypic.org/" + this.model.photoURL(),
-            }));
-
-            $(this.el).html(this.template({
+        initialize: function() {
+            this.$el.html(this.template({
+                "photo_id": this.model.photoId(),
                 "photo_url": this.model.photoURL(),
                 "photo_image_url": this.model.photoImageURL(),
                 "avatar_image_url": this.model.avatarImageURL(),
-                "display_name": this.model.displayName()
+                "display_name": this.model.displayName(),
+                "created_at": this.model.createdTime()
             }));
 
             return this;
+        },
+        render: function(){
+            return this;
         }
+    });
+
+    var LogInHeader = Parse.View.extend({
+
+        el: ".user-signin-navbar",
+
+        template: _.template($("#login-navbar-template").html()),
+
+        events: {
+            "click #facebook-sign-in": "logIn"
+        },
+
+        initialize: function () {
+            _.bindAll(this, "logIn");
+        },
+
+        redirectToMainView: function() {
+            this.undelegateEvents();
+            App.showHomePage();
+        },
+
+        setUpNewUser: function() {
+            var self = this;
+            FB.api(
+                "/me",
+                function (response) {
+                    if (response && !response.error) {
+                        var name = response.name;
+                        if (name && name.length > 0){
+                            Parse.User.current().set("displayName", name);
+                        }
+                        var facebookId = response.id;
+                        if (facebookId && facebookId.length > 0){
+                            Parse.User.current().set("facebookId", facebookId);
+                        }
+                        Parse.User.current().save();
+                    }
+                    self.redirectToMainView();
+                }
+            );
+        },
+
+        logIn: function (e) {
+            var self = this;
+            Parse.FacebookUtils.logIn("user_about_me", {
+                success: function (user) {
+                    if (!user.existed()) {
+                        self.setUpNewUser();
+                    } else {
+                        self.redirectToMainView();
+                    }
+                },
+                error: function (user, error) {
+                    alert("User cancelled the Facebook login or did not fully authorize.");
+                }
+            });
+            return false;
+        },
+
+
+        render: function () {
+            this.$el.html(this.template);
+            this.delegateEvents();
+            return this;
+        }
+    });
+
+    var LogOutHeader = Parse.View.extend({
+
+        el: ".user-signin-navbar",
+
+        events: {
+            "click .log-out": "logOut"
+        },
+
+        template: _.template($("#logout-navbar-template").html()),
+
+        initialize: function () {
+            _.bindAll(this, "logOut");
+        },
+        // Logs out the user and shows the login view
+        logOut: function(e) {
+            Parse.User.logOut();
+            window.location.reload();
+        },
+
+        render: function () {
+            this.$el.html(this.template);
+            this.delegateEvents();
+            return this;
+        }
+    });
+
+    var WelcomeView = Parse.View.extend({
+        template: _.template($("#welcome-template").html()),
+
+        initialize: function(){
+            this.$el.html(this.template);
+        },
+
+        render: function(){
+            return this;
+        }
+
     });
 
     var TimelineView = Parse.View.extend({
 
         // Delegated events for creating new items, and clearing completed ones.
 
-        el: ".content",
+        template: _.template($("#timeline-template").html()),
 
         initialize: function() {
             var self = this;
-            var header = new LogOutHeader();
 
             _.bindAll(this, 'addOne', 'addAll');
 
-            this.$el.html(_.template($("#timeline-template").html()));
+            this.$el.html(this.template);
 
-            // Create our collection of Pictures
             this.photos = new PhotoList();
+            this.photos.bind('add', this.addOne);
+            this.photos.bind('reset', this.addAll);
+
+        },
+
+        loaded: 0,
+        previousCount: 0,
+        photosPerPage: 4,
+
+        queryPage: function(page){
+
             var Activity = Parse.Object.extend("Activity");
             var followingActivitiesQuery = new Parse.Query(Activity);
             followingActivitiesQuery.equalTo("type", "follow");
@@ -130,16 +247,21 @@ $(function () {
             // Setup the query for the collection to look for todos from the current user
             this.photos.query = new Parse.Query.or(photosFromCurrentUserQuery,photosFromFollowedUsersQuery);
             this.photos.query.include("user");
-            this.photos.query.limit(8);
+            var self = this;
+            this.photos.query.count({success: function(count){
+                self.previousCount = count;
+                console.log("Panagram count:" + self.previousCount)
+            }});
+
+            this.photos.query.limit(this.photosPerPage);
+            this.photos.query.skip(page*this.photosPerPage);
             this.photos.query.descending("createdAt");
 
+            this.photos.query.count({success: function(count){
+                self.loaded += count;
+            }});
 
-            this.photos.bind('add', this.addOne);
-            this.photos.bind('reset', this.addAll);
-//            this.photos.bind('all', this.render);
-//            Fetch all the todo items for this user35G
             this.photos.fetch();
-
         },
 
 
@@ -147,6 +269,8 @@ $(function () {
         // Re-rendering the App just means refreshing the statistics -- the rest
         // of the app doesn't change.
         render: function() {
+            this.queryPage(0);
+
             this.$("#photo-list").fadeIn();
             this.delegateEvents();
             return this;
@@ -155,9 +279,14 @@ $(function () {
 //        // Add a single todo item to the list by creating a view for it, and
 //        // appending its element to the `<ul>`.
         addOne: function(photo) {
-            var view = new PhotoView({model: photo});
-            var rendered = view.render();
-            this.$("#photo-list").append(rendered.el);
+            // Prevent duplicates
+            var photoIdTag = "#"+photo.photoId();
+            var existingPhoto = $(photoIdTag)[0];
+            if (! existingPhoto ) {
+                var view = new PhotoView({model: photo});
+                var rendered = view.render();
+                this.$("#photo-list").append(rendered.el);
+            }
         },
 
         // Add all items in the Todos collection at once.
@@ -169,116 +298,104 @@ $(function () {
 
     });
 
-    var LogOutHeader = Parse.View.extend({
-        events: {
-            "click .log-out": "logOut"
-        },
 
-        el: ".logout-navbar",
-
-        initialize: function () {
-            _.bindAll(this, "logOut");
-            this.render();
-        },
-        // Logs out the user and shows the login view
-        logOut: function(e) {
-            Parse.User.logOut();
-            window.location.reload();
-            FB.destroySession(function(){});
-            new LogInView();
-            this.undelegateEvents();
-            delete this;
-        },
-        render: function () {
-            this.$el.html(_.template($("#logout-navbar-template").html()));
-            this.delegateEvents();
-        }
-    });
-
-
-    var LogInView = Parse.View.extend({
-        events: {
-            "click #facebook-sign-in": "logIn"
-        },
-
-        el: ".content",
-
-        initialize: function () {
-            _.bindAll(this, "logIn");
-            this.render();
-        },
-
-        logIn: function (e) {
-            var self = this;
-            Parse.FacebookUtils.logIn("user_about_me", {
-                success: function (user) {
-                    console.log('login in success');
-                    if (!user.existed()) {
-                        console.log('login in user did not exists');
-                        FB.api(
-                            "/me",
-                            function (response) {
-                                if (response && !response.error) {
-                                    var name = response.name;
-                                    if (name && name.length > 0){
-                                        Parse.User.current().set("displayName", name);
-                                    }
-                                    var facebookId = response.id;
-                                    if (facebookId && facebookId.length > 0){
-                                        Parse.User.current().set("facebookId", facebookId);
-                                    }
-                                    Parse.User.current().save();
-                                }
-                                new TimelineView();
-                                self.undelegateEvents();
-                                delete this;
-                            }
-                        );
-                    } else {
-                        console.log('login in user did exists');
-                        new TimelineView();
-                        self.undelegateEvents();
-                        delete this;
-                    }
-                },
-                error: function (user, error) {
-                    alert("User cancelled the Facebook login or did not fully authorize.");
-                }
-            });
-
-            return false;
-        },
-
-        render: function () {
-            this.$el.html(_.template($("#login-template").html()));
-            this.delegateEvents();
-        }
-    });
 
     // The main view for the app
     var AppView = Parse.View.extend({
         // Instead of generating a new element, bind to the existing skeleton of
         // the App already present in the HTML.
-        el: $("#panagram"),
+        el: $(".content"),
 
         initialize: function () {
+            _.bindAll(this, 'showHomePage', 'showPhotoPage', 'render');
+
+            this.timelineView = new TimelineView();
+            this.loginHeader = new LogInHeader();
+            this.logoutHeader = new LogOutHeader();
+            this.welcomeView = new WelcomeView();
             this.render();
+        },
+
+        render: function () {
+            return this;
+        },
+
+        updateHeader: function() {
+            if (Parse.User.current()) {
+                this.logoutHeader.render();
+            } else {
+                this.loginHeader.render();
+            }
+        },
+
+        showHomePage: function() {
+            this.updateHeader();
+            if (Parse.User.current()) {
+                this.showTimelinePage();
+            } else {
+                this.showWelcomePage()
+            }
+
+        },
+
+        showWelcomePage: function() {
+            $(this.el).html(this.welcomeView.render().el);
             if (!this.$("#photo-list .timeline-photo").is(':visible')) {
                 this.$("#photo-list").fadeIn();
             }
         },
 
-        render: function () {
-            if (Parse.User.current()) {
-                new TimelineView();
-            } else {
-                new LogInView();
+        showTimelinePage: function() {
+            $(this.el).html(this.timelineView.render().el);
+            if (!this.$("#photo-list .timeline-photo").is(':visible')) {
+                this.$("#photo-list").fadeIn();
             }
+        },
+
+        showPhotoPage: function(photo) {
+            this.updateHeader();
+            this.singlePhotoView = new SinglePhotoView({model: photo});
+            // Load landing page template
+            $(this.el).html(this.singlePhotoView.render().el);
         }
     });
 
-    new AppView;
+    var App = new AppView;
 
+
+    var AppRouter = Backbone.Router.extend({
+        routes: {
+            "pic/:object_id": "getPic",
+            "*actions": "defaultRoute"
+        },
+
+        getPic: function(object_id) {
+
+            var query = new Parse.Query(Photo);
+            query.include("user");
+            query.get(object_id, {
+                success: function(photo) {
+                    App.showPhotoPage(photo);
+                },
+                error: function(object, error) {
+                    console.error(error);
+                    // The object was not retrieved successfully.
+                    // error is a Parse.Error with an error code and description.
+                    App.showError();
+                }
+            });
+        },
+
+        defaultRoute: function(actions) {
+            App.showHomePage();
+        }
+    });
+
+    // Initiate the router
+    var app_router = new AppRouter();
+
+    // Start Backbone history
+    Backbone.history.start();
 });
 
 $(window).load(function(){
@@ -288,6 +405,3 @@ $(window).load(function(){
     })
 });
 
-$(document).ready(function() {
-    $("abbr.timeago").timeago();
-});
