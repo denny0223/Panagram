@@ -231,26 +231,6 @@
      UIRemoteNotificationTypeAlert|
      UIRemoteNotificationTypeSound];
         
-    // Download user's profile picture
-    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"picture",@"fields",nil];
-    [FBRequestConnection startWithGraphPath:@"/me/picture" parameters:params HTTPMethod:@"GET" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        if (!error) {
-            // Success! Include your code to handle the results here
-            NSLog(@"user info: %@", result);
-            NSURL *profilePictureURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", [[PFUser currentUser] objectForKey:kPAPUserFacebookIDKey]]];
-            NSString *profilePictureString = [profilePictureURL absoluteString];
-            NSString *oldProfilePictureString = [[PFUser currentUser] valueForKey:kPAPUserProfilePicUrlKey];
-            if (! [profilePictureString isEqualToString:oldProfilePictureString] ){
-                NSLog(@"Upadating profile picture URL");
-                [[PFUser currentUser] setObject:[profilePictureURL absoluteString] forKey:kPAPUserProfilePicUrlKey];
-            }
-
-        } else {
-            // An error occurred, we need to handle the error
-            // See: https://developers.facebook.com/docs/ios/errors
-            NSLog(@"Error!");
-        }
-    }];
 }
 
 - (void)logOut {

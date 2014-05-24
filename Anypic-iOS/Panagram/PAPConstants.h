@@ -86,7 +86,6 @@ extern NSString *const kPAPUserFacebookIDKey;
 extern NSString *const kPAPUserPhotoIDKey;
 extern NSString *const kPAPUserProfilePicSmallKey;
 extern NSString *const kPAPUserProfilePicMediumKey;
-extern NSString *const kPAPUserProfilePicUrlKey;
 extern NSString *const kPAPUserFacebookFriendsKey;
 extern NSString *const kPAPUserAlreadyAutoFollowedFacebookFriendsKey;
 

@@ -47,8 +47,8 @@
 }
 
 - (void)viewDidLayoutSubviews {
-    [self.logInView.facebookButton setTitle:@"" forState:UIControlStateNormal];
-    [self.logInView.facebookButton setImage:nil forState:UIControlStateNormal];
+//    [self.logInView.facebookButton setTitle:@"" forState:UIControlStateNormal];
+//    [self.logInView.facebookButton setImage:nil forState:UIControlStateNormal];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {

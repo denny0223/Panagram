@@ -234,7 +234,7 @@ static TTTTimeIntervalFormatter *timeFormatter;
     [self.photoScrollView addSubview:self.photoImageView];
     [self.photoScrollView setDelegate:self];
     
-    [self updateViewsToFill:self.isFilled animated:NO];
+//    [self updateViewsToFill:self.isFilled animated:NO];
     
     PFFile *imageFile = [self.photo objectForKey:kPAPPhotoPictureKey];
 
@@ -242,6 +242,9 @@ static TTTTimeIntervalFormatter *timeFormatter;
         self.photoImageView.img.file = imageFile;
 
         [self.photoImageView.img loadInBackground:^(UIImage *image, NSError *error) {
+            NSLog(@"Loaded");
+            self.isFilled = image.size.width >= image.size.height;
+            if(self.isFilled) NSLog(@"IsFilled");
             [self updateViewsToFill:self.isFilled animated:NO];
         }];
     }
@@ -376,74 +379,61 @@ static TTTTimeIntervalFormatter *timeFormatter;
     CGPoint scrollViewContentOffset = CGPointZero;
     CGSize scrollViewContentSize = self.photoScrollView.frame.size;
     CGFloat PICTURE_FRAME_WIDTH_HEIGHT = 280.0f;
-    
+    CGFloat scrollWidth = self.photoScrollView.frame.size.width;
+    CGFloat scrollHeight = self.photoScrollView.frame.size.height;
+    CGFloat scrollRatio = scrollWidth/scrollHeight;
+    CGFloat imageHeight = self.photoImageView.image.size.height;
+    CGFloat imageWidth = self.photoImageView.image.size.width;
+    CGFloat imageRatio = imageWidth/imageHeight;
+    if ( imageWidth < imageHeight ) {
+        fill = false;
+        animated = false;
+        NSLog(@"Skipping");
+    }
     if ( fill ){
-        CGFloat scrollWidth = self.photoScrollView.frame.size.width;
-        CGFloat scrollHeight = self.photoScrollView.frame.size.height;
-        CGFloat scrollRatio = scrollWidth/scrollHeight;
-        CGFloat imageHeight = self.photoImageView.image.size.height;
-        CGFloat imageWidth = self.photoImageView.image.size.width;
-        CGFloat imageRatio = imageWidth/imageHeight;
-        if (imageRatio > scrollRatio)
+        if (imageRatio >= scrollRatio)
         {
             CGFloat scaleRatio = self.photoScrollView.frame.size.height / self.photoImageView.image.size.height;
             CGFloat scaledImageWidth = self.photoImageView.image.size.width*scaleRatio;
             scrollViewContentSize = CGSizeMake(scaledImageWidth, PICTURE_FRAME_WIDTH_HEIGHT);
             scrollViewContentOffset = CGPointMake(scaledImageWidth/2-PICTURE_FRAME_WIDTH_HEIGHT/2, 0.0f);
         }
-    }
-    
-    if ( fill )
-    {
         [self setToFill:scrollViewContentSize offsetPoint:scrollViewContentOffset animated:animated];
-    } else
+    }
+    else
     {
         [self setToFit:scrollViewContentSize offsetPoint:scrollViewContentOffset animated:animated];
     }
+
 }
 
 - (void) setToFill:(CGSize)contentSize offsetPoint:(CGPoint)point animated:(BOOL)animated
 {
     [self.photoScrollView setContentSize:contentSize];
-
-    if (YES){
-        [self.photoImageView initToScaleAspectFillToFrame:CGRectMake(0,0,contentSize.width,contentSize.height)];
-        
-        [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionAllowUserInteraction
-                         animations:^{
-                            self.photoScrollView.contentOffset = point;
-                             [self.photoImageView animaticToScaleAspectFill];
-                         } completion:^(BOOL finished) {
-                             [self.photoImageView animateFinishToScaleAspectFill];
-                         }];
-    }
-    else
-    {
-        self.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
-        self.photoScrollView.contentOffset = point;
-        self.photoImageView.img.frame = self.photoScrollView.bounds;
-    }
+    float duration = (animated)? 0.3f: 0.0f;
+    [self.photoImageView initToScaleAspectFillToFrame:CGRectMake(0,0,contentSize.width,contentSize.height)];
+    
+    [UIView animateWithDuration:duration delay:0.0f options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^{
+                        self.photoScrollView.contentOffset = point;
+                         [self.photoImageView animaticToScaleAspectFill];
+                     } completion:^(BOOL finished) {
+                         [self.photoImageView animateFinishToScaleAspectFill];
+                     }];
 }
 
 - (void) setToFit:(CGSize)contentSize offsetPoint:(CGPoint)point animated:(BOOL)animated
 {
-    if (animated){
-        [self.photoImageView initToScaleAspectFitToFrame:CGRectMake(0,0,contentSize.width,contentSize.height)];
-        
-        [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionAllowUserInteraction
-                         animations:^{
-                             self.photoScrollView.contentOffset = point;
-                             [self.photoImageView animaticToScaleAspectFit];
-                         } completion:^(BOOL finished) {
-                             [self.photoImageView animateFinishToScaleAspectFit];
-                         }];
-    }
-    else
-    {
-        self.photoImageView.contentMode = UIViewContentModeScaleAspectFill;
-        self.photoScrollView.contentOffset = point;
-        self.photoImageView.img.frame = self.photoScrollView.bounds;
-    }
+    float duration = (animated)? 0.3f: 0.0f;
+    [self.photoImageView initToScaleAspectFitToFrame:CGRectMake(0,0,contentSize.width,contentSize.height)];
+    
+    [UIView animateWithDuration:duration delay:0.0f options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^{
+                         self.photoScrollView.contentOffset = point;
+                         [self.photoImageView animaticToScaleAspectFit];
+                     } completion:^(BOOL finished) {
+                         [self.photoImageView animateFinishToScaleAspectFit];
+                     }];
     [self.photoScrollView setContentSize:contentSize];
 }
 
