@@ -333,6 +333,12 @@
             return;
         }
         
+PFQuery *query = [PFQuery queryWithClassName:@"GameScore"];
+[query getObjectInBackgroundWithId:@"xWMyZ4YEGZ" block:^(PFObject *gameScore, NSError *error) {
+    // Do something with the returned PFObject in the gameScore variable.
+    NSLog(@"%@", gameScore);
+}];
+        
         // If the push notification payload references a user, we will attempt to push their profile into view
         NSString *fromObjectId = [remoteNotificationPayload objectForKey:kPAPPushPayloadFromUserObjectIdKey];
         if (fromObjectId && fromObjectId.length > 0) {

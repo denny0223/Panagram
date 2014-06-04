@@ -26,8 +26,6 @@ $(function () {
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 
-
-
     // Copied from AnyPic
     var Photo = Parse.Object.extend("Photo", {
         photoURL: function() {
@@ -226,7 +224,7 @@ $(function () {
 
         loaded: 0,
         previousCount: 0,
-        photosPerPage: 4,
+        photosPerPage: 10,
 
         queryPage: function(page){
 

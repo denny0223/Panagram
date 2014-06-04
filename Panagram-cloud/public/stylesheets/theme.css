@@ -39,7 +39,7 @@ body {
 }
 
 .timeline-photo img.unloaded-image {
-    min-height: 250px;
+    min-height: 500px;
 }
 
 .col-centered{
