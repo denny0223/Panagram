@@ -19,9 +19,9 @@ Anypic requires Xcode 5 and iOS 7. The [tutorial](https://parse.com/tutorials/an
 
 #### Setting up your Xcode project
 
-1. Open the Xcode project at `Anypic-iOS/Anypic.xcodeproj`.
+1. Open the Xcode project at `Panagram-iOS/Panagram.xcodeproj`.
 
-2. Create your Anypic App on [Parse](https://parse.com/apps).
+2. Create your Panagram App on [Parse](https://parse.com/apps).
 
 3. Copy your new app's application id and client key into `AppDelegate.m`:
 
@@ -29,7 +29,7 @@ Anypic requires Xcode 5 and iOS 7. The [tutorial](https://parse.com/tutorials/an
 [Parse setApplicationId:@"APPLICATION_ID" clientKey:@"CLIENT_KEY];"
 ```
 
-#### Configuring Anypic's Facebook integration
+#### Configuring Panagram's Facebook integration
 
 1. Set up a Facebook app at http://developers.facebook.com/apps
 
