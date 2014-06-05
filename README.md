@@ -11,7 +11,7 @@ Here is the [Anypic tutorial](https://parse.com/tutorials/anypic) from which thi
 * [Android Setup](#android-setup)
 * [Web Setup](#web-setup)
 * [Cloud Code](#cloud-code)
-* [Background Info](#background-info)
+* [Background Info](#background-information)
 
 ## iOS Setup
 
