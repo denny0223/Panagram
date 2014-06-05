@@ -6,6 +6,12 @@ Panagram is a photo-sharing style application, specifically tailored for panoram
 
 Here is the [Anypic tutorial](https://parse.com/tutorials/anypic) from which this project is derived. We have built upon the original iOS Anypic code, and have created the Android and web versions mostly from scratch. 
 
+## Overview
+* [iOS Setup](#ios-setup)
+* [Android Setup](#android-setup)
+* [Web Setup](#web-setup)
+* [Cloud Code](#cloud-code)
+* [Background Info](#background-info)
 
 ## iOS Setup
 
@@ -101,3 +107,7 @@ Anypic uses media queries to present different layouts on iPad, iOS and various 
 ## Cloud Code
 
 Add your Parse app id and master key to `Anypic-iOS/CloudCode/config/global.json`, then type `parse deploy` from the command line at `Anypic-cloud`. See the [Cloud Code Guide](https://parse.com/docs/cloud_code_guide#clt) for more information about the `parse` CLI.
+
+## Background Information
+
+A video describing our project can be found [here](https://www.youtube.com/watch?v=xLdTZYzK_j4)
