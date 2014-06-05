@@ -33,7 +33,7 @@ Anypic requires Xcode 5 and iOS 7. The [tutorial](https://parse.com/tutorials/an
 
 ## Android Setup
 
-Make sure you have the Android SDK installed on your system. The version of the Eclipse IDE with ADT (Android Developer Tools) built-in can be found [here](http://developer.android.com/sdk/index.html). Panagram is designed for Android version 4.0 and above (minSdkVersion="14"). 
+Make sure you have the Android SDK installed on your system. The version of the Eclipse IDE with ADT (Android Developer Tools) built-in can be found [here](http://developer.android.com/sdk/index.html). Panagram is designed for Android version 4.0 and above. 
 
 #### How to Run
 
