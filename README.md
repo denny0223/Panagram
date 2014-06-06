@@ -110,4 +110,7 @@ Add your Parse app id and master key to `Panagram-cloud/config/global.json`, the
 
 ## Background Information
 
-A video describing our project can be found [here](https://www.youtube.com/watch?v=xLdTZYzK_j4)
+A video describing our project can be found [here](https://www.youtube.com/watch?v=xLdTZYzK_j4).
+
+A paper describing our experiences can be found [here](https://www.dropbox.com/s/c8e33vzmid3l09u/cs263Paper.pdf)
+
