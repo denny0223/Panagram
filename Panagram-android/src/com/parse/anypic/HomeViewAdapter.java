@@ -6,10 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
@@ -85,21 +82,16 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
         usernameView.setText((String) user.get("displayName"));
 
         // Set up the actual photo
-        ParseImageView anypicPhotoView = (ParseImageView) v.findViewById(R.id.photo);
+        ImageView anypicPhotoView = (ImageView) v.findViewById(R.id.photo);
         ParseFile photoFile = photo.getImage();
 
         // TODO (future) - get image bitmap, then set the image view with setImageBitmap()
         // we can use the decodeBitmap tricks to reduce the size to save memory
 
         if (photoFile != null) {
-            anypicPhotoView.setParseFile(photoFile);
-            anypicPhotoView.loadInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                    // nothing to do
-                    //Log.i(AnypicApplication.TAG, "8. Image view loaded");
-                }
-            });
+            Picasso.with(getContext())
+                .load(photoFile.getUrl())
+                .into(anypicPhotoView);
         } else { // Clear ParseImageView if an object doesn't have a photo
             anypicPhotoView.setImageResource(android.R.color.transparent);
         }
