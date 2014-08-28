@@ -22,72 +22,72 @@ import com.squareup.picasso.Picasso;
 
 public class UserViewAdapter extends ParseQueryAdapter<Photo> {
 
-	public UserViewAdapter(Context context) {
-		super(context, new ParseQueryAdapter.QueryFactory<Photo>() {
-			public ParseQuery<Photo> create() {
+    public UserViewAdapter(Context context) {
+        super(context, new ParseQueryAdapter.QueryFactory<Photo>() {
+            public ParseQuery<Photo> create() {
 
-				// Get the current user's photos
-				ParseQuery<Photo> photosFromCurrentUserQuery = new ParseQuery<Photo>("Photo");
-				photosFromCurrentUserQuery.whereEqualTo("user", ParseUser.getCurrentUser());
-				photosFromCurrentUserQuery.whereExists("thumbnail");
+                // Get the current user's photos
+                ParseQuery<Photo> photosFromCurrentUserQuery = new ParseQuery<Photo>("Photo");
+                photosFromCurrentUserQuery.whereEqualTo("user", ParseUser.getCurrentUser());
+                photosFromCurrentUserQuery.whereExists("thumbnail");
 
-				photosFromCurrentUserQuery.include("user");
-				photosFromCurrentUserQuery.orderByDescending("createdAt");
+                photosFromCurrentUserQuery.include("user");
+                photosFromCurrentUserQuery.orderByDescending("createdAt");
 
-				return photosFromCurrentUserQuery;
-			}
-		});
-	}
+                return photosFromCurrentUserQuery;
+            }
+        });
+    }
 
-	/**
-	 * This class is overridden to provide a custom view for each item in the
-	 * User's List View. It sets the user's profile picture, the user name,
-	 * and then displays the actual photo.
-	 *
-	 * See user_list_item.xml for the layout file
-	 *
-	 * @see com.parse.ParseQueryAdapter#getItemView(com.parse.ParseObject, android.view.View, android.view.ViewGroup)
-	 */
-	@Override
-	public View getItemView(Photo photo, View v, ViewGroup parent) {
+    /**
+     * This class is overridden to provide a custom view for each item in the
+     * User's List View. It sets the user's profile picture, the user name,
+     * and then displays the actual photo.
+     *
+     * See user_list_item.xml for the layout file
+     *
+     * @see com.parse.ParseQueryAdapter#getItemView(com.parse.ParseObject, android.view.View, android.view.ViewGroup)
+     */
+    @Override
+    public View getItemView(Photo photo, View v, ViewGroup parent) {
 
-		if (v == null) {
-			v = View.inflate(getContext(), R.layout.home_list_item, null);
-		}
+        if (v == null) {
+            v = View.inflate(getContext(), R.layout.home_list_item, null);
+        }
 
-		super.getItemView(photo, v, parent);
+        super.getItemView(photo, v, parent);
 
-		// Set up the user's profile picture
-		ImageView fbPhotoView = (ImageView) v.findViewById(R.id.user_thumbnail);
-		ParseUser user = photo.getUser();
-		Picasso.with(getContext())
-		    .load("https://graph.facebook.com/" + user.getString("facebookId") + "/picture?type=square")
-		    .into(fbPhotoView);
+        // Set up the user's profile picture
+        ImageView fbPhotoView = (ImageView) v.findViewById(R.id.user_thumbnail);
+        ParseUser user = photo.getUser();
+        Picasso.with(getContext())
+            .load("https://graph.facebook.com/" + user.getString("facebookId") + "/picture?type=square")
+            .into(fbPhotoView);
 
-		// Set up the username
-		TextView usernameView = (TextView) v.findViewById(R.id.user_name);
-		usernameView.setText((String) user.get("displayName"));
+        // Set up the username
+        TextView usernameView = (TextView) v.findViewById(R.id.user_name);
+        usernameView.setText((String) user.get("displayName"));
 
-		// Set up the actual photo
-		ParseImageView anypicPhotoView = (ParseImageView) v.findViewById(R.id.photo);
-		ParseFile photoFile = photo.getImage();
+        // Set up the actual photo
+        ParseImageView anypicPhotoView = (ParseImageView) v.findViewById(R.id.photo);
+        ParseFile photoFile = photo.getImage();
 
-		// TODO (future) - get image bitmap, then set the image view with setImageBitmap()
-		// we can use the decodeBitmap tricks to reduce the size to save memory
+        // TODO (future) - get image bitmap, then set the image view with setImageBitmap()
+        // we can use the decodeBitmap tricks to reduce the size to save memory
 
-		if (photoFile != null) {
-			anypicPhotoView.setParseFile(photoFile);
-			anypicPhotoView.loadInBackground(new GetDataCallback() {
-				@Override
-				public void done(byte[] data, ParseException e) {
-					// nothing to do
-				}
-			});
-		} else { // Clear ParseImageView if an object doesn't have a photo
-	        anypicPhotoView.setImageResource(android.R.color.transparent);
-	    }
+        if (photoFile != null) {
+            anypicPhotoView.setParseFile(photoFile);
+            anypicPhotoView.loadInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] data, ParseException e) {
+                    // nothing to do
+                }
+            });
+        } else { // Clear ParseImageView if an object doesn't have a photo
+            anypicPhotoView.setImageResource(android.R.color.transparent);
+        }
 
-		return v;
-	}
+        return v;
+    }
 
 }
