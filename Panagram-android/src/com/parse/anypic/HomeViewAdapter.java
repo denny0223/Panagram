@@ -67,7 +67,7 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
      * @see com.parse.ParseQueryAdapter#getItemView(com.parse.ParseObject, android.view.View, android.view.ViewGroup)
      */
     @Override
-    public View getItemView(Photo photo, View v, ViewGroup parent) {
+    public View getItemView(final Photo photo, View v, ViewGroup parent) {
 
         if (v == null) {
             v = View.inflate(getContext(), R.layout.home_list_item, null);
@@ -120,6 +120,16 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
 
             @Override
             public void onClick(View v) {
+                TextView likeView = (TextView) v;
+                int like = Integer.valueOf((String) likeView.getText());
+                likeView.setText(String.valueOf(++like));
+
+                Activity likeActivity = new Activity();
+                likeActivity.setFromUser(ParseUser.getCurrentUser());
+                likeActivity.setToUser(photo.getUser());
+                likeActivity.setPhoto(photo);
+                likeActivity.setType("like");
+                likeActivity.saveEventually();
             }
         });
 
