@@ -175,13 +175,13 @@ public class HomeListActivity extends ListActivity {
 
                             // Make another facebook request to auto follow all of
                             // the current user's facebook friends who are using Anypic
-                            if( currentUser.get("userAlreadyAutoFollowedFacebookFriends")!=null &&
-                                    ((Boolean) currentUser.get("userAlreadyAutoFollowedFacebookFriends")) ){
-                                // do nothing
-                                Log.i(AnypicApplication.TAG, "Already followed facebook friends");
-                            } else{
-                                autoFollowFacebookFriendsRequest();
-                            }
+//                            if( currentUser.get("userAlreadyAutoFollowedFacebookFriends")!=null &&
+//                                    ((Boolean) currentUser.get("userAlreadyAutoFollowedFacebookFriends")) ){
+//                                // do nothing
+//                                Log.i(AnypicApplication.TAG, "Already followed facebook friends");
+//                            } else{
+//                                autoFollowFacebookFriendsRequest();
+//                            }
                             // Associate the device with a user
                             ParseInstallation installation = ParseInstallation.getCurrentInstallation();
                             installation.put("user", currentUser);
