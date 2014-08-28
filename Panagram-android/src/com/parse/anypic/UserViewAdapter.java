@@ -3,7 +3,10 @@ package com.parse.anypic;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -82,6 +85,27 @@ public class UserViewAdapter extends ParseQueryAdapter<Photo> {
         } else { // Clear ParseImageView if an object doesn't have a photo
             anypicPhotoView.setImageResource(android.R.color.transparent);
         }
+
+        TextView likeCount = (TextView) v.findViewById(R.id.like_count);
+        likeCount.setOnTouchListener(new OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    v.setBackgroundColor(Color.LTGRAY);
+                } else {
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                }
+                return false;
+            }
+        });
+
+        likeCount.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+            }
+        });
 
         return v;
     }
