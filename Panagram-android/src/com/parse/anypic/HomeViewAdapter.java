@@ -32,13 +32,13 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
 			public ParseQuery<Photo> create() {
 
 				// First, query for the friends whom the current user follows
-				ParseQuery<com.parse.anypic.Activity> followingActivitiesQuery = new ParseQuery<com.parse.anypic.Activity>("Activity");
-				followingActivitiesQuery.whereMatches("type", "follow");
-				followingActivitiesQuery.whereEqualTo("fromUser", ParseUser.getCurrentUser());
+//				ParseQuery<com.parse.anypic.Activity> followingActivitiesQuery = new ParseQuery<com.parse.anypic.Activity>("Activity");
+//				followingActivitiesQuery.whereMatches("type", "follow");
+//				followingActivitiesQuery.whereEqualTo("fromUser", ParseUser.getCurrentUser());
 
 				// Get the photos from the Users returned in the previous query
 				ParseQuery<Photo> photosFromFollowedUsersQuery = new ParseQuery<Photo>("Photo");
-				photosFromFollowedUsersQuery.whereMatchesKeyInQuery("user", "toUser", followingActivitiesQuery);
+//				photosFromFollowedUsersQuery.whereMatchesKeyInQuery("user", "toUser", followingActivitiesQuery);
 				photosFromFollowedUsersQuery.whereExists("image");
 
 				// Get the current user's photos
