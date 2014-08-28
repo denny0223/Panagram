@@ -1,7 +1,6 @@
 package com.parse.anypic;
 
 import com.parse.ParseClassName;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -50,11 +49,11 @@ public class Activity extends ParseObject {
         put("content", c);
     }
 
-    public ParseFile getPhoto(){
-        return getParseFile("photo");
+    public ParseObject getPhoto(){
+        return getParseObject("photo");
     }
 
-    public void setPhoto(ParseFile pf){
+    public void setPhoto(ParseObject pf){
         put("photo", pf);
     }
 }
