@@ -26,3 +26,5 @@ proguard/
 *.log
 
 *.local
+
+res/values/keys.xml

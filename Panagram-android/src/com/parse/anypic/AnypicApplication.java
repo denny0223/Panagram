@@ -12,30 +12,30 @@ import com.parse.PushService;
 public class AnypicApplication extends Application {
 
 	static final String TAG = "Panagram";
-	
+
 	@Override
 	public void onCreate() {
-		super.onCreate();		
-		
+		super.onCreate();
+
 		/*
 		 * In this tutorial, we'll subclass ParseObjects for convenience to
 		 * create and modify Photo objects.
-		 * 
+		 *
 		 * Also, we'll use an Activity class to keep track of the relationships
-		 * of ParseUsers with each other and Photos. Every time a user follows, likes 
+		 * of ParseUsers with each other and Photos. Every time a user follows, likes
 		 * or comments, a new activity is created to represent the relationship.
 		 */
 		ParseObject.registerSubclass(Photo.class);
 		ParseObject.registerSubclass(Activity.class);
-		
+
 		/*
 		 * Fill in this section with your Parse credentials
 		 */
-		Parse.initialize(this, "YOUR_APPLICATION_KEY", "YOUR_CLIENT_KEY");
-		
+		Parse.initialize(this, getString(R.string.parse_application_id), getString(R.string.parse_client_key));
+
 		// Set your Facebook App Id in strings.xml
-		ParseFacebookUtils.initialize(getString(R.string.app_id));
-		
+		ParseFacebookUtils.initialize(getString(R.string.facebook_app_id));
+
 
 		/*
 		 * For more information on app security and Parse ACL:
@@ -53,7 +53,7 @@ public class AnypicApplication extends Application {
 		 * Default ACL is public read access, and user read/write access
 		 */
 		ParseACL.setDefaultACL(defaultACL, true);
-		
+
 		/*
 		 *  Register for push notifications.
 		 */
