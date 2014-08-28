@@ -1,6 +1,8 @@
 package com.parse.anypic;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -75,6 +77,7 @@ public class UserViewAdapter extends ParseQueryAdapter<Photo> {
         if (photoFile != null) {
             Picasso.with(getContext())
                 .load(photoFile.getUrl())
+                .placeholder(new ColorDrawable(Color.LTGRAY))
                 .into(anypicPhotoView);
         } else { // Clear ParseImageView if an object doesn't have a photo
             anypicPhotoView.setImageResource(android.R.color.transparent);
