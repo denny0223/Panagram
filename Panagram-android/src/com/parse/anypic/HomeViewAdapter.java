@@ -17,8 +17,6 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
-import java.util.Arrays;
-
 /*
  * The HomeViewAdapter is an extension of ParseQueryAdapter
  * that has a custom layout for Anypic photos in the home
@@ -30,25 +28,8 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
     public HomeViewAdapter(Context context) {
         super(context, new ParseQueryAdapter.QueryFactory<Photo>() {
             public ParseQuery<Photo> create() {
-
-                // First, query for the friends whom the current user follows
-//                ParseQuery<com.parse.anypic.Activity> followingActivitiesQuery = new ParseQuery<com.parse.anypic.Activity>("Activity");
-//                followingActivitiesQuery.whereMatches("type", "follow");
-//                followingActivitiesQuery.whereEqualTo("fromUser", ParseUser.getCurrentUser());
-
-                // Get the photos from the Users returned in the previous query
-                ParseQuery<Photo> photosFromFollowedUsersQuery = new ParseQuery<Photo>("Photo");
-//                photosFromFollowedUsersQuery.whereMatchesKeyInQuery("user", "toUser", followingActivitiesQuery);
-                photosFromFollowedUsersQuery.whereExists("image");
-
-                // Get the current user's photos
-                ParseQuery<Photo> photosFromCurrentUserQuery = new ParseQuery<Photo>("Photo");
-                photosFromCurrentUserQuery.whereEqualTo("user", ParseUser.getCurrentUser());
-                photosFromCurrentUserQuery.whereExists("image");
-
-                // We create a final compound query that will find all of the photos that were
-                // taken by the user's friends or by the user
-                ParseQuery<Photo> query = ParseQuery.or(Arrays.asList( photosFromFollowedUsersQuery, photosFromCurrentUserQuery ));
+                ParseQuery<Photo> query = new ParseQuery<Photo>("Photo");
+                query.whereExists("image");
                 query.include("user");
                 query.orderByDescending("createdAt");
 

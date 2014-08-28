@@ -18,15 +18,9 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class HomeListActivity extends ListActivity {
@@ -173,15 +167,6 @@ public class HomeListActivity extends ListActivity {
                             currentUser.put("displayName", user.getName());
                             currentUser.saveInBackground();
 
-                            // Make another facebook request to auto follow all of
-                            // the current user's facebook friends who are using Anypic
-//                            if( currentUser.get("userAlreadyAutoFollowedFacebookFriends")!=null &&
-//                                    ((Boolean) currentUser.get("userAlreadyAutoFollowedFacebookFriends")) ){
-//                                // do nothing
-//                                Log.i(AnypicApplication.TAG, "Already followed facebook friends");
-//                            } else{
-//                                autoFollowFacebookFriendsRequest();
-//                            }
                             // Associate the device with a user
                             ParseInstallation installation = ParseInstallation.getCurrentInstallation();
                             installation.put("user", currentUser);
@@ -205,77 +190,6 @@ public class HomeListActivity extends ListActivity {
                 });
         request.executeAsync();
 
-    }
-
-    /**
-     * This function performs a request to the Facebook Graph API, which
-     * finds all the friends of the current ParseUser and checks if any
-     * of them currently use Anypic. If so, then it automatically follows
-     * those friends on Anypic, by creating new Activity relationships.
-     */
-    private void autoFollowFacebookFriendsRequest(){
-        Request request = Request.newMyFriendsRequest(ParseFacebookUtils.getSession(),
-                new Request.GraphUserListCallback() {
-                    @Override
-                    public void onCompleted(List<GraphUser> friendList, Response response) {
-                        if(friendList != null){
-                            List<String> ids = toIdsList(friendList);
-
-                            // Select * From Users Where User.facebookID is contained in
-                            // the list of IDs of users returned from the GraphApi
-                            ParseQuery<ParseUser> friendsQuery = ParseUser.getQuery();
-                            friendsQuery.whereContainedIn("facebookId", ids);
-                            friendsQuery.findInBackground(new FindCallback<ParseUser>() {
-                                @Override
-                                public void done(List<ParseUser> objects, ParseException e) {
-                                    if(e == null && objects!=null){
-                                        // friendsQuery successful, follow these users
-                                        ParseUser currentUser = ParseUser.getCurrentUser();
-                                        for(ParseUser friend : objects){
-                                            com.parse.anypic.Activity followActivity = new com.parse.anypic.Activity();
-                                            followActivity.setFromUser(currentUser);
-                                            followActivity.setToUser(friend);
-                                            followActivity.setType("follow");
-                                            followActivity.saveEventually();
-                                        }
-                                        currentUser.put("userAlreadyAutoFollowedFacebookFriends", true);
-                                        currentUser.saveInBackground();
-                                    } else {
-                                        // friendsQuery failed
-                                        Log.i(AnypicApplication.TAG, "Query to find facebook friends in Parse failed");
-                                    }
-                                }
-                            }); // end findInBackground()
-
-
-                            // handle errors from facebook
-                        } else if (response.getError() != null) {
-                            if ((response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_RETRY)
-                                    || (response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_REOPEN_SESSION)) {
-                                Log.i(AnypicApplication.TAG,
-                                        "The facebook session was invalidated.");
-                                onLogoutButtonClicked();
-                            } else {
-                                Log.i(AnypicApplication.TAG,
-                                        "Some other error: "
-                                                + response.getError()
-                                                        .getErrorMessage());
-                            }
-                        }
-
-                    }
-                });// end GraphUserListCallback
-        request.executeAsync();
-    }
-
-    // Take a list of Facebook GraphUsers and return a list of their IDs
-    private List<String> toIdsList(List<GraphUser> fbUsers){
-        List<String> ids = new ArrayList<String>();
-
-        for(GraphUser user : fbUsers){
-            ids.add(user.getId());
-        }
-        return ids;
     }
 
     private void onLogoutButtonClicked() {
