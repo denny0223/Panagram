@@ -57,6 +57,10 @@
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name">
         </activity>
+        <activity
+            android:name="com.parse.anypic.PhotoActivity"
+            android:label="@string/app_name" >
+        </activity>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>

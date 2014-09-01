@@ -36,7 +36,6 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
                 ParseQuery<Photo> query = new ParseQuery<Photo>("Photo");
                 query.whereExists("image");
                 query.include("user");
-//                query.whereMatchesQuery("photo", likeQuery);
                 query.orderByDescending("createdAt");
 
                 return query;

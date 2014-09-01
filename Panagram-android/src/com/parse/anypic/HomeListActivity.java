@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.Request;
@@ -25,6 +24,7 @@ import com.parse.ParseUser;
 
 public class HomeListActivity extends ListActivity {
 
+    private Activity mActivity = this;
     private HomeViewAdapter mHomeViewAdapter;
     private UserViewAdapter mUserViewAdapter;
 
@@ -37,10 +37,12 @@ public class HomeListActivity extends ListActivity {
         lv.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
+                Photo photo =
+                        (Photo) parent.getItemAtPosition(position);
 
-                // Photo clicked == parent.getItemAtPosition(position)
-                Toast.makeText(getApplicationContext(),
-                        "Item clicked: " + parent.getItemAtPosition(position).getClass().getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mActivity, PhotoActivity.class);
+                intent.putExtra(PhotoActivity.INTENT_EXTRA_PHOTO, photo.getObjectId());
+                mActivity.startActivity(intent);
             }
         });
 
