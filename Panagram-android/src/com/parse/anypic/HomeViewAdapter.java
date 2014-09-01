@@ -17,6 +17,9 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+import com.parse.anypic.model.Activity;
+import com.parse.anypic.model.ParseColumn;
+import com.parse.anypic.model.Photo;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -33,10 +36,10 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
         super(context, new ParseQueryAdapter.QueryFactory<Photo>() {
             public ParseQuery<Photo> create() {
 
-                ParseQuery<Photo> query = new ParseQuery<Photo>("Photo");
-                query.whereExists("image");
-                query.include("user");
-                query.orderByDescending("createdAt");
+                ParseQuery<Photo> query = new ParseQuery<Photo>(Photo.class.getSimpleName());
+                query.whereExists(Photo.IMAGE);
+                query.include(Photo.USER);
+                query.orderByDescending(ParseColumn.CREATED_AT);
 
                 return query;
             }
@@ -65,12 +68,12 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
         ImageView fbPhotoView = (ImageView) v.findViewById(R.id.user_thumbnail);
         ParseUser user = photo.getUser();
         Picasso.with(getContext())
-            .load("https://graph.facebook.com/" + user.getString("facebookId") + "/picture?type=square")
+            .load("https://graph.facebook.com/" + user.getString(ParseColumn.USER_FACEBOOK_ID) + "/picture?type=square")
             .into(fbPhotoView);
 
         // Set up the username
         TextView usernameView = (TextView) v.findViewById(R.id.user_name);
-        usernameView.setText((String) user.get("displayName"));
+        usernameView.setText((String) user.get(ParseColumn.USER_DISPLAY_NAME));
 
         // Set up the actual photo
         ImageView anypicPhotoView = (ImageView) v.findViewById(R.id.photo);
@@ -90,11 +93,11 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
 
         final TextView likeCount = (TextView) v.findViewById(R.id.like_count);
 
-        ParseQuery<Activity> likeQuery = new ParseQuery<Activity>("Activity");
-        likeQuery.whereEqualTo("type", "like");
-        likeQuery.include("fromUser");
-        likeQuery.whereExists("photo");
-        likeQuery.whereEqualTo("photo", photo);
+        ParseQuery<Activity> likeQuery = new ParseQuery<Activity>(Activity.class.getSimpleName());
+        likeQuery.whereEqualTo(Activity.TYPE, Activity.TYPE_LIKE);
+        likeQuery.include(Activity.FROM_USER);
+        likeQuery.whereExists(Activity.PHOTO);
+        likeQuery.whereEqualTo(Activity.PHOTO, photo);
         likeQuery.findInBackground(new FindCallback<Activity>() {
 
             @Override
@@ -160,7 +163,7 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
                 likeActivity.setFromUser(ParseUser.getCurrentUser());
                 likeActivity.setToUser(photo.getUser());
                 likeActivity.setPhoto(photo);
-                likeActivity.setType("like");
+                likeActivity.setType(Activity.TYPE_LIKE);
                 likeActivity.saveEventually();
             }
         });

@@ -17,6 +17,9 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.anypic.model.Activity;
+import com.parse.anypic.model.ParseColumn;
+import com.parse.anypic.model.Photo;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -40,9 +43,9 @@ public class PhotoActivity extends android.app.Activity {
         Intent intent = getIntent();
         String photoObjectId = intent.getStringExtra(INTENT_EXTRA_PHOTO);
 
-        ParseQuery<Photo> query = new ParseQuery<Photo>("Photo");
-        query.whereEqualTo("objectId", photoObjectId);
-        query.include("user");
+        ParseQuery<Photo> query = new ParseQuery<Photo>(Photo.class.getSimpleName());
+        query.whereEqualTo(ParseColumn.OBJECT_ID, photoObjectId);
+        query.include(Photo.USER);
 
         query.getFirstInBackground(new GetCallback<Photo>() {
 
@@ -50,10 +53,11 @@ public class PhotoActivity extends android.app.Activity {
             public void done(final Photo photo, ParseException e) {
                 ParseUser user = photo.getUser();
                 Picasso.with(mActivity)
-                    .load("https://graph.facebook.com/" + user.getString("facebookId") + "/picture?type=square")
+                    .load("https://graph.facebook.com/" + user.getString(ParseColumn.USER_FACEBOOK_ID)
+                            + "/picture?type=square")
                     .into(fbPhotoView);
 
-                usernameView.setText((String) user.get("displayName"));
+                usernameView.setText((String) user.get(ParseColumn.USER_DISPLAY_NAME));
 
                 ParseFile photoFile = photo.getImage();
                 if (photoFile != null) {
@@ -65,11 +69,11 @@ public class PhotoActivity extends android.app.Activity {
                     photoView.setImageResource(android.R.color.transparent);
                 }
 
-                ParseQuery<Activity> likeQuery = new ParseQuery<Activity>("Activity");
-                likeQuery.whereEqualTo("type", "like");
-                likeQuery.include("fromUser");
-                likeQuery.whereExists("photo");
-                likeQuery.whereEqualTo("photo", photo);
+                ParseQuery<Activity> likeQuery = new ParseQuery<Activity>(Activity.class.getSimpleName());
+                likeQuery.whereEqualTo(Activity.TYPE, Activity.TYPE_LIKE);
+                likeQuery.include(Activity.FROM_USER);
+                likeQuery.whereExists(Activity.PHOTO);
+                likeQuery.whereEqualTo(Activity.PHOTO, photo);
                 likeQuery.findInBackground(new FindCallback<Activity>() {
 
                     @Override
@@ -126,7 +130,7 @@ public class PhotoActivity extends android.app.Activity {
                 likeActivity.setFromUser(ParseUser.getCurrentUser());
                 likeActivity.setToUser(photo.getUser());
                 likeActivity.setPhoto(photo);
-                likeActivity.setType("like");
+                likeActivity.setType(Activity.TYPE_LIKE);
                 likeActivity.saveEventually();
             }
         });

@@ -20,6 +20,8 @@ import com.facebook.model.GraphUser;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.parse.anypic.model.ParseColumn;
+import com.parse.anypic.model.Photo;
 
 
 public class HomeListActivity extends ListActivity {
@@ -165,13 +167,13 @@ public class HomeListActivity extends ListActivity {
                              */
                             ParseUser currentUser = ParseUser
                                     .getCurrentUser();
-                            currentUser.put("facebookId", user.getId());
-                            currentUser.put("displayName", user.getName());
+                            currentUser.put(ParseColumn.USER_FACEBOOK_ID, user.getId());
+                            currentUser.put(ParseColumn.USER_DISPLAY_NAME, user.getName());
                             currentUser.saveInBackground();
 
                             // Associate the device with a user
                             ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-                            installation.put("user", currentUser);
+                            installation.put(ParseColumn.INSTALLATION_USER, currentUser);
                             installation.saveInBackground();
 
                             // handle errors accessing data from facebook

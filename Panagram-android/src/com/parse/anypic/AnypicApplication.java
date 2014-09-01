@@ -8,6 +8,8 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.PushService;
+import com.parse.anypic.model.Activity;
+import com.parse.anypic.model.Photo;
 
 public class AnypicApplication extends Application {
 

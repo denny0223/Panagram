@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.SaveCallback;
+import com.parse.anypic.model.Photo;
 
 /*
  * NewPhotoActivity contains two fragments that handle

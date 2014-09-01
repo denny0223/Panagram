@@ -15,6 +15,8 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+import com.parse.anypic.model.ParseColumn;
+import com.parse.anypic.model.Photo;
 import com.squareup.picasso.Picasso;
 
 /*
@@ -29,12 +31,12 @@ public class UserViewAdapter extends ParseQueryAdapter<Photo> {
             public ParseQuery<Photo> create() {
 
                 // Get the current user's photos
-                ParseQuery<Photo> photosFromCurrentUserQuery = new ParseQuery<Photo>("Photo");
-                photosFromCurrentUserQuery.whereEqualTo("user", ParseUser.getCurrentUser());
-                photosFromCurrentUserQuery.whereExists("thumbnail");
+                ParseQuery<Photo> photosFromCurrentUserQuery = new ParseQuery<Photo>(Photo.class.getSimpleName());
+                photosFromCurrentUserQuery.whereEqualTo(Photo.USER, ParseUser.getCurrentUser());
+                photosFromCurrentUserQuery.whereExists(Photo.THUMBNAIL);
 
-                photosFromCurrentUserQuery.include("user");
-                photosFromCurrentUserQuery.orderByDescending("createdAt");
+                photosFromCurrentUserQuery.include(Photo.USER);
+                photosFromCurrentUserQuery.orderByDescending(ParseColumn.CREATED_AT);
 
                 return photosFromCurrentUserQuery;
             }
@@ -63,12 +65,12 @@ public class UserViewAdapter extends ParseQueryAdapter<Photo> {
         ImageView fbPhotoView = (ImageView) v.findViewById(R.id.user_thumbnail);
         ParseUser user = photo.getUser();
         Picasso.with(getContext())
-            .load("https://graph.facebook.com/" + user.getString("facebookId") + "/picture?type=square")
+            .load("https://graph.facebook.com/" + user.getString(ParseColumn.USER_FACEBOOK_ID) + "/picture?type=square")
             .into(fbPhotoView);
 
         // Set up the username
         TextView usernameView = (TextView) v.findViewById(R.id.user_name);
-        usernameView.setText((String) user.get("displayName"));
+        usernameView.setText((String) user.get(ParseColumn.USER_DISPLAY_NAME));
 
         // Set up the actual photo
         ImageView anypicPhotoView = (ImageView) v.findViewById(R.id.photo);
