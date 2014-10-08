@@ -52,9 +52,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="5dp"
             android:text="@string/zero"
-            android:textSize="15sp" >
-
-        </TextView>
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/comment_count"
@@ -65,8 +63,29 @@
             android:gravity="center_vertical"
             android:paddingLeft="5dp"
             android:text="@string/zero"
-            android:textSize="15sp" >
-        </TextView>
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send" />
     </LinearLayout>
 
 </LinearLayout>

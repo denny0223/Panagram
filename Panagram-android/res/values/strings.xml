@@ -27,5 +27,6 @@
     <string name="logout">Log out</string>
     <string name="no_data">No data</string>
     <string name="zero">0</string>
+    <string name="send">Send</string>
 
 </resources>
