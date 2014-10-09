@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.anypic.model.Activity;
 import com.parse.anypic.model.ParseColumn;
 import com.parse.anypic.model.Photo;
@@ -39,6 +42,8 @@ public class PhotoActivity extends android.app.Activity {
         final ImageView fbPhotoView = (ImageView) findViewById(R.id.user_thumbnail);
         final TextView usernameView = (TextView) findViewById(R.id.user_name);
         final TextView likeCountView = (TextView) findViewById(R.id.like_count);
+        final EditText commentEditText = (EditText) findViewById(R.id.comment);
+        final Button sendButton = (Button) findViewById(R.id.btn_send);
 
         Intent intent = getIntent();
         String photoObjectId = intent.getStringExtra(INTENT_EXTRA_PHOTO);
@@ -95,8 +100,32 @@ public class PhotoActivity extends android.app.Activity {
                         }
                     }
                 });
+
+                sendButton.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if (!commentEditText.getText().toString().replaceAll("\\s", "").isEmpty()) {
+                            Activity commentActivity = new Activity();
+                            commentActivity.setContent(commentEditText.getText().toString());
+                            commentActivity.setFromUser(ParseUser.getCurrentUser());
+                            commentActivity.setToUser(photo.getUser());
+                            commentActivity.setPhoto(photo);
+                            commentActivity.setType(Activity.TYPE_COMMENT);
+                            commentActivity.saveInBackground(new SaveCallback() {
+
+                                @Override
+                                public void done(ParseException arg0) {
+                                    // refresh comment list
+                                }
+                            });
+
+                            commentEditText.setText("");
+                        }
                     }
                 });
+            }
+        });
     }
 
     public void setUnliked(TextView v, final Photo photo) {

@@ -13,6 +13,7 @@ public class Activity extends ParseObject {
     public static final String CONTENT = "content";
     public static final String PHOTO = "photo";
 
+    public static final String TYPE_COMMENT = "comment";
     public static final String TYPE_LIKE = "like";
 
     public Activity() {
