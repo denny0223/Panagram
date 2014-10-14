@@ -35,7 +35,6 @@
         android:layout_margin="5dip"
         android:adjustViewBounds="true"
         android:paddingLeft="3dip"
-        android:paddingRight="3dip"
         android:scaleType="centerCrop" />
 
     <LinearLayout
@@ -50,17 +49,6 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_like"
-            android:drawablePadding="5dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="5dp"
-            android:text="@string/zero"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/comment_count"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_comment"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
             android:paddingLeft="5dp"
