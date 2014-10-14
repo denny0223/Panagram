@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.parse.FindCallback;
@@ -19,6 +20,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.anypic.model.Activity;
@@ -43,6 +45,7 @@ public class PhotoActivity extends android.app.Activity {
         final ImageView fbPhotoView = (ImageView) findViewById(R.id.user_thumbnail);
         final TextView usernameView = (TextView) findViewById(R.id.user_name);
         final TextView likeCountView = (TextView) findViewById(R.id.like_count);
+        final ProgressBar loadingProgress = (ProgressBar) findViewById(R.id.loading_progress);
         final ListView commentListView = (ListView) findViewById(R.id.comment_list);
         final EditText commentEditText = (EditText) findViewById(R.id.comment);
         final Button sendButton = (Button) findViewById(R.id.btn_send);
@@ -104,6 +107,20 @@ public class PhotoActivity extends android.app.Activity {
                 });
                 CommentListAdapter commentListAdapter = new CommentListAdapter(mActivity, photo);
                 commentListView.setAdapter(commentListAdapter);
+                commentListAdapter.setPaginationEnabled(false);
+                commentListAdapter.addOnQueryLoadListener(new OnQueryLoadListener<Activity>() {
+
+                    @Override
+                    public void onLoaded(List<Activity> arg0, Exception arg1) {
+                        loadingProgress.setVisibility(View.GONE);
+                        commentListView.setSmoothScrollbarEnabled(true);
+                        commentListView.smoothScrollToPosition(commentListView.getBottom());
+                    }
+
+                    @Override
+                    public void onLoading() {
+                    }
+                });
 
                 sendButton.setOnClickListener(new OnClickListener() {
 
