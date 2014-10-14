@@ -91,31 +91,39 @@ public class HomeViewAdapter extends ParseQueryAdapter<Photo> {
             anypicPhotoView.setImageResource(android.R.color.transparent);
         }
 
-        final TextView likeCount = (TextView) v.findViewById(R.id.like_count);
+        final TextView likeCountView = (TextView) v.findViewById(R.id.like_count);
+        final TextView commentCountView = (TextView) v.findViewById(R.id.comment_count);
 
-        ParseQuery<Activity> likeQuery = new ParseQuery<Activity>(Activity.class.getSimpleName());
-        likeQuery.whereEqualTo(Activity.TYPE, Activity.TYPE_LIKE);
-        likeQuery.include(Activity.FROM_USER);
-        likeQuery.whereExists(Activity.PHOTO);
-        likeQuery.whereEqualTo(Activity.PHOTO, photo);
-        likeQuery.findInBackground(new FindCallback<Activity>() {
+        ParseQuery<Activity> activitiesQuery = new ParseQuery<Activity>(Activity.class.getSimpleName());
+        activitiesQuery.include(Activity.FROM_USER);
+        activitiesQuery.whereExists(Activity.PHOTO);
+        activitiesQuery.whereEqualTo(Activity.PHOTO, photo);
+        activitiesQuery.findInBackground(new FindCallback<Activity>() {
 
             @Override
             public void done(List<Activity> activities, ParseException e) {
                 boolean isLiked = false;
+                int likeCount = 0, commentCount = 0;
 
-                likeCount.setText(String.valueOf(activities.size()));
                 for (Activity activity : activities) {
-                    if (activity.getFromUser().getUsername()
-                            .equals(ParseUser.getCurrentUser().getUsername())) {
-                        isLiked = true;
+                    if (activity.getType().equals(Activity.TYPE_LIKE)) {
+                        likeCount++;
+                        if (activity.getFromUser().getUsername()
+                                .equals(ParseUser.getCurrentUser().getUsername())) {
+                            isLiked = true;
+                        }
+                    } else if (activity.getType().equals(Activity.TYPE_COMMENT)) {
+                        commentCount++;
                     }
                 }
 
+                likeCountView.setText(String.valueOf(likeCount));
+                commentCountView.setText(String.valueOf(commentCount));
+
                 if (isLiked) {
-                    setLiked(likeCount);
+                    setLiked(likeCountView);
                 } else {
-                    setUnliked(likeCount, photo);
+                    setUnliked(likeCountView, photo);
                 }
             }
         });
