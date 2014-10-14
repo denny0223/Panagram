@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parse.ParseQuery;
+import com.parse.ParseQuery.CachePolicy;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.parse.anypic.model.Activity;
@@ -28,9 +29,12 @@ public class CommentListAdapter extends ParseQueryAdapter<Activity> {
                 photoCommentQuery.include(Activity.FROM_USER);
                 photoCommentQuery.orderByAscending(ParseColumn.CREATED_AT);
 
+                photoCommentQuery.setCachePolicy(CachePolicy.NETWORK_ELSE_CACHE);
+
                 return photoCommentQuery;
             }
         });
+        setPaginationEnabled(false);
     }
 
     @Override

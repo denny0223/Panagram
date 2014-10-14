@@ -49,6 +49,7 @@ public class PhotoActivity extends android.app.Activity {
         final ListView commentListView = (ListView) findViewById(R.id.comment_list);
         final EditText commentEditText = (EditText) findViewById(R.id.comment);
         final Button sendButton = (Button) findViewById(R.id.btn_send);
+        final ProgressBar sendingProgress = (ProgressBar) findViewById(R.id.sending_progress);
 
         Intent intent = getIntent();
         String photoObjectId = intent.getStringExtra(INTENT_EXTRA_PHOTO);
@@ -105,7 +106,7 @@ public class PhotoActivity extends android.app.Activity {
                         }
                     }
                 });
-                CommentListAdapter commentListAdapter = new CommentListAdapter(mActivity, photo);
+                final CommentListAdapter commentListAdapter = new CommentListAdapter(mActivity, photo);
                 commentListView.setAdapter(commentListAdapter);
                 commentListAdapter.setPaginationEnabled(false);
                 commentListAdapter.addOnQueryLoadListener(new OnQueryLoadListener<Activity>() {
@@ -127,6 +128,9 @@ public class PhotoActivity extends android.app.Activity {
                     @Override
                     public void onClick(View v) {
                         if (!commentEditText.getText().toString().replaceAll("\\s", "").isEmpty()) {
+                            sendButton.setVisibility(View.GONE);
+                            sendingProgress.setVisibility(View.VISIBLE);
+
                             Activity commentActivity = new Activity();
                             commentActivity.setContent(commentEditText.getText().toString());
                             commentActivity.setFromUser(ParseUser.getCurrentUser());
@@ -137,7 +141,9 @@ public class PhotoActivity extends android.app.Activity {
 
                                 @Override
                                 public void done(ParseException arg0) {
-                                    // refresh comment list
+                                    sendButton.setVisibility(View.VISIBLE);
+                                    sendingProgress.setVisibility(View.GONE);
+                                    commentListAdapter.loadObjects();
                                 }
                             });
 
