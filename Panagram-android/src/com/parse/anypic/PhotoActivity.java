@@ -11,6 +11,7 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.FindCallback;
@@ -42,6 +43,7 @@ public class PhotoActivity extends android.app.Activity {
         final ImageView fbPhotoView = (ImageView) findViewById(R.id.user_thumbnail);
         final TextView usernameView = (TextView) findViewById(R.id.user_name);
         final TextView likeCountView = (TextView) findViewById(R.id.like_count);
+        final ListView commentListView = (ListView) findViewById(R.id.comment_list);
         final EditText commentEditText = (EditText) findViewById(R.id.comment);
         final Button sendButton = (Button) findViewById(R.id.btn_send);
 
@@ -100,6 +102,8 @@ public class PhotoActivity extends android.app.Activity {
                         }
                     }
                 });
+                CommentListAdapter commentListAdapter = new CommentListAdapter(mActivity, photo);
+                commentListView.setAdapter(commentListAdapter);
 
                 sendButton.setOnClickListener(new OnClickListener() {
 
