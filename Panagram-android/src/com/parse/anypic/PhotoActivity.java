@@ -120,7 +120,7 @@ public class PhotoActivity extends android.app.Activity {
                     public void onLoaded(List<Activity> arg0, Exception arg1) {
                         loadingProgress.setVisibility(View.GONE);
                         commentListView.setSmoothScrollbarEnabled(true);
-                        commentListView.smoothScrollToPosition(commentListView.getBottom());
+                        commentListView.setSelection(commentListView.getCount());
                     }
 
                     @Override
