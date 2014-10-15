@@ -42,6 +42,7 @@ public class PhotoActivity extends android.app.Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
+        getActionBar().hide();
 
         final ImageView photoView = (ImageView) findViewById(R.id.photo);
         final ImageView fbPhotoView = (ImageView) findViewById(R.id.user_thumbnail);
