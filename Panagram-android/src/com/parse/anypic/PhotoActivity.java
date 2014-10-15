@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -35,6 +36,8 @@ public class PhotoActivity extends android.app.Activity {
     public static final String INTENT_EXTRA_PHOTO = "photo";
 
     android.app.Activity mActivity = this;
+    Photo mPhoto;
+    Activity mLikeActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,19 @@ public class PhotoActivity extends android.app.Activity {
         Intent intent = getIntent();
         String photoObjectId = intent.getStringExtra(INTENT_EXTRA_PHOTO);
 
+        likeCountView.setOnTouchListener(new OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    v.setBackgroundColor(Color.LTGRAY);
+                } else {
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                }
+                return false;
+            }
+        });
+
         ParseQuery<Photo> query = new ParseQuery<Photo>(Photo.class.getSimpleName());
         query.whereEqualTo(ParseColumn.OBJECT_ID, photoObjectId);
         query.include(Photo.USER);
@@ -62,6 +78,7 @@ public class PhotoActivity extends android.app.Activity {
 
             @Override
             public void done(final Photo photo, ParseException e) {
+                mPhoto = photo;
                 ParseUser user = photo.getUser();
                 Picasso.with(mActivity)
                     .load("https://graph.facebook.com/" + user.getString(ParseColumn.USER_FACEBOOK_ID)
@@ -89,20 +106,19 @@ public class PhotoActivity extends android.app.Activity {
 
                     @Override
                     public void done(List<Activity> activities, ParseException e) {
-                        boolean isLiked = false;
 
                         likeCountView.setText(String.valueOf(activities.size()));
                         for (Activity activity : activities) {
                             if (activity.getFromUser().getUsername()
                                     .equals(ParseUser.getCurrentUser().getUsername())) {
-                                isLiked = true;
+                                mLikeActivity = activity;
                             }
                         }
 
-                        if (isLiked) {
+                        if (mLikeActivity != null) {
                             setLiked(likeCountView);
                         } else {
-                            setUnliked(likeCountView, photo);
+                            setUnliked(likeCountView);
                         }
                     }
                 });
@@ -155,47 +171,61 @@ public class PhotoActivity extends android.app.Activity {
         });
     }
 
-    public void setUnliked(TextView v, final Photo photo) {
-        v.setClickable(true);
+    public void setUnliked(TextView v) {
         v.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-
-        v.setOnTouchListener(new OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    v.setBackgroundColor(Color.LTGRAY);
-                } else {
-                    v.setBackgroundColor(Color.TRANSPARENT);
-                }
-                return false;
-            }
-        });
 
         v.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                TextView likeView = (TextView) v;
+                v.setClickable(false);
+
+                final TextView likeView = (TextView) v;
                 int like = Integer.valueOf((String) likeView.getText());
                 likeView.setText(String.valueOf(++like));
+                likeView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
 
-                setLiked(likeView);
+                mLikeActivity = new Activity();
+                mLikeActivity.setFromUser(ParseUser.getCurrentUser());
+                mLikeActivity.setToUser(mPhoto.getUser());
+                mLikeActivity.setPhoto(mPhoto);
+                mLikeActivity.setType(Activity.TYPE_LIKE);
+                mLikeActivity.saveInBackground(new SaveCallback() {
 
-                Activity likeActivity = new Activity();
-                likeActivity.setFromUser(ParseUser.getCurrentUser());
-                likeActivity.setToUser(photo.getUser());
-                likeActivity.setPhoto(photo);
-                likeActivity.setType(Activity.TYPE_LIKE);
-                likeActivity.saveEventually();
+                    @Override
+                    public void done(ParseException arg0) {
+                        setLiked(likeView);
+                    }
+                });
+
             }
         });
     }
 
     public void setLiked(TextView v) {
         v.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
-        v.setClickable(false);
-        v.setOnTouchListener(null);
+
+        v.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                v.setClickable(false);
+                final TextView likeView = (TextView) v;
+                int like = Integer.valueOf((String) likeView.getText());
+                likeView.setText(String.valueOf(--like));
+                likeView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
+
+                mLikeActivity.deleteInBackground(new DeleteCallback() {
+
+                    @Override
+                    public void done(ParseException arg0) {
+                        setUnliked(likeView);
+                    }
+                });
+                mLikeActivity = null;
+
+            }
+        });
     }
 
 }
