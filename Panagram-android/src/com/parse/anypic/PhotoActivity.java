@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +25,7 @@ import com.parse.SaveCallback;
 import com.parse.anypic.model.Activity;
 import com.parse.anypic.model.ParseColumn;
 import com.parse.anypic.model.Photo;
+import com.parse.anypic.util.ViewPressEffectHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -57,18 +56,7 @@ public class PhotoActivity extends android.app.Activity {
         Intent intent = getIntent();
         String photoObjectId = intent.getStringExtra(INTENT_EXTRA_PHOTO);
 
-        likeCountView.setOnTouchListener(new OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    v.setBackgroundColor(Color.LTGRAY);
-                } else {
-                    v.setBackgroundColor(Color.TRANSPARENT);
-                }
-                return false;
-            }
-        });
+        ViewPressEffectHelper.attach(likeCountView);
 
         ParseQuery<Photo> query = new ParseQuery<Photo>(Photo.class.getSimpleName());
         query.whereEqualTo(ParseColumn.OBJECT_ID, photoObjectId);
